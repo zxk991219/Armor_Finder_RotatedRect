@@ -1,0 +1,7 @@
+../Video/image/src/armor/1.png
+../Video/image/src/armor/2.png
+../Video/image/src/armor/3.png
+../Video/image/src/armor/4.png
+../Video/image/src/armor/5.png
+../Video/image/src/armor/7.png
+../Video/image/src/armor/8.png

@@ -1,0 +1,1 @@
+../image_files/armor/template.png
