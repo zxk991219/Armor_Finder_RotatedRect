@@ -3,7 +3,7 @@
 # include <iostream>
 # include <opencv2/opencv.hpp>
 # include <opencv2/calib3d.hpp>
-# include "../../../other/include/drawText.hpp"
+//# include "../../../other/include/drawText.hpp"
 
 
 # define HALF_WIDTH 7.10
@@ -15,7 +15,7 @@
 namespace sp
 {
 
-    void get_distance(cv::Mat& frame, cv::Rect bboxes_armor)
+    void get_distance(cv::Mat& frame, cv::RotatedRect& bboxes_armor)
 {   
     double m[3][3] = {{1056.641597953005, 0, 958.1078670170519}, { 0, 1055.821668018513, 558.7308899751256}, {0, 0, 1}};
     cv::Mat cam= cv::Mat(3, 3, CV_64F, m);//相机内参
@@ -25,12 +25,14 @@ namespace sp
     // fs["camera_matrix"] >> cam;
     // fs["distortion_coefficients"] >> dis;//传入相机的内参和外参
 
-    cv::Rect rect=bboxes_armor;
+    cv::RotatedRect rect=bboxes_armor;
+    cv::Point2f  pts[4];
+    rect.points(pts);
     std::vector<cv::Point2f> pnts=std::vector<cv::Point2f>{
-        cv::Point2f(rect.tl().x,rect.tl().y),
-        cv::Point2f(rect.tl().x+rect.width,rect.tl().y),
-        cv::Point2f(rect.br().x,rect.br().y),
-        cv::Point2f(rect.br().x-rect.width,rect.br().y)
+        cv::Point2f(pts[1]),
+        cv::Point2f(pts[2]),
+        cv::Point2f(pts[3]),
+        cv::Point2f(pts[0])
     };//设置像素坐标
     std::vector<cv::Point3f> obj=std::vector<cv::Point3f>{
             cv::Point3f(-HALF_WIDTH, -HALF_HEIGHT, 0),	//tl
@@ -70,9 +72,7 @@ namespace sp
     double data= tVec.at<double>(2,0);//提出z轴坐标
     std::string text= std::to_string( data);
 
-    cv::Point origin;
-         origin.x = rect.tl().x+rect.width;
-	     origin.y = rect.br().y+rect.height;
+    cv::Point origin=pts[2];
     cv::putText( frame,//每一帧的图像
                       text,//文本内容
                       origin,//文本框左下角
