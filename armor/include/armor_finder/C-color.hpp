@@ -5,11 +5,10 @@
 #define BLOB_BLUE 0
 #define BLOB_RED 1
 
-# ifdef USE_NEW_CODE //新代码在下面
 
 namespace sp
 {
-
+//敌方颜色不同时，提取不同的颜色
 static uint8_t get_blob_color(const cv::Mat &src, const cv::RotatedRect &blobPos) 
 {
     auto region = blobPos.boundingRect();
@@ -33,6 +32,3 @@ static uint8_t get_blob_color(const cv::Mat &src, const cv::RotatedRect &blobPos
     }
 }
 }
-#else //旧代码在下面
-
-#endif
