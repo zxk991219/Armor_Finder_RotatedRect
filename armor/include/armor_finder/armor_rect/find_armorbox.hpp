@@ -40,7 +40,7 @@ std::vector<cv::Rect> findArmorBox(cv::Mat& mat_real, std::vector<cv::RotatedRec
     return armor_boxes_up_right_rects;
     // return armor_boxes;
 }
-
+//画出装甲板
 void get_armor(cv::Mat& mat_real, const cv::RotatedRect rect_i, const cv::RotatedRect rect_j)
 {
 
