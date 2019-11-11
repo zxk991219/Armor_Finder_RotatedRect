@@ -3,6 +3,7 @@
 # include <iostream>
 # include <opencv2/opencv.hpp>
 # include "armorbox_isok.hpp"
+# include "../distance/PNP.hpp"
 
 
 namespace sp
@@ -125,25 +126,7 @@ void get_armor(cv::Mat& mat_real, const cv::RotatedRect rect_i, const cv::Rotate
     std::cout << std::endl;
     #endif
 
-
-
-
-
-
-
-    // for()
-
-
-    // = (vertices_i[0].x < vertices_j[0].x ? vertices_i[0] : vertices_j[0]);
-
-
-    // = (vertices_i[1].x < vertices_j[1].x ? vertices_i[1] : vertices_j[1]);
-
-    // = (vertices_i[2].x > vertices_j[2].x ? vertices_i[2] : vertices_j[2]);
-
-    // = (vertices_i[3].x > vertices_j[3].x ? vertices_i[3] : vertices_j[3]);
-
-
+    sp::get_distance(mat_real, vertices_dual_light);
 
     # ifdef SHOW_ARMOR
     for (int i = 0; i < 4; i++)
@@ -151,14 +134,6 @@ void get_armor(cv::Mat& mat_real, const cv::RotatedRect rect_i, const cv::Rotate
         cv::line(mat_real, vertices_dual_light[i], vertices_dual_light[(i + 1) % 4], cv::Scalar(0, 255, 0), 2, 8, 0);
     }
     # endif
-
-
-
-
-
-    
-
-
 
 }
 
