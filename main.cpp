@@ -15,10 +15,10 @@
 // #define USE_HSV_FILTER
 #define USE_RGB_FILTER
 
-// #define DEBUG
+#define DEBUG
 #define USE_NEW_CODE
 
-#define SHOW_MEDIANBLUR
+// #define SHOW_MEDIANBLUR
 // #define SHOW_MONO_COLOR //显示RGB通道分离结果
 // #define SHOW_IMAGEPART_LIGHT //显示灯条矩形截图
 // #define SHOW_ARMOR_IMAGE //显示装甲板矩形截图
@@ -27,8 +27,10 @@
 // #define SHOW_ARMOR_UP_RIGHT //显示灯条匹配的装甲板矩形
 // #define SHOW_ARMOR_WHOLE //显示完整装甲板矩形
 // #define SHOW_DISTANCE //显示距离
+// #define SHOW_CONTOURS
+#define FRAME_BY_FRAME
 // #define CLASSIFIER_OUTPUT //输出分类器结果到"Video/image/dst/negative/和positive"
-#define SHOW_CONTOURS
+
 
 
 
@@ -114,9 +116,13 @@ int main()
 
             std::cout << "程序运行时间：" << timer.get() << "ms" << std::endl; //结束计时
 
+            #ifdef FRAME_BY_FRAME
+            cv::waitKey(0); //逐帧播放
+            
+            #else
             if(cv::waitKey(10) >= 10)
                 break;
-            // cv::waitKey(0); //逐帧播放
+            #endif
         }
     }
 

@@ -61,7 +61,11 @@ namespace sp
     theta_y = theta_y * (180 / PI);
     theta_z = theta_z * (180 / PI);
 
-    std::cout<<"Roll:"<<theta_z<<"Yaw:"<<theta_y<<"Pitch:"<<theta_x<<std::endl;
+    std::cout<<"Roll:"<<theta_z<<std::endl;
+    std::cout<<"Yaw:"<<theta_y<<std::endl;
+    std::cout<<"Pitch:"<<theta_x<<std::endl;
+    std::cout<<std::endl;
+
 
     // std::vector<uchar>  buff;//将mat型转换为string
     // cv::imencode(".bmp", tVec, buff);
