@@ -1,21 +1,16 @@
 #pragma once
 
-#include <opencv2/opencv.hpp>
 #include <iostream>
 #include <vector>
-#include <algorithm>
-#include "find_lightbox.hpp"
+#include <opencv2/opencv.hpp>
 #include "find_armorbox.hpp"
+#include "find_lightbox.hpp"
 #include "../image_processing/proportion_thresh.hpp"
-#include "../image_processing/classifier.hpp"
 
 
 #ifdef SHOW_DISTANCE
 #include "../distance/PNP.hpp"
 #endif
-
-#define USE_NEW_CODE
-
 
 #ifdef USE_NEW_CODE //新代码在下面
 
@@ -42,7 +37,6 @@ void findArmor(cv::Mat& mat, cv::Mat& mat_real)
 
 
 }
-
 }
 
 
