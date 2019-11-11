@@ -9,6 +9,45 @@
 
 namespace sp
 {
+std::vector<cv::RotatedRect> findArmorBox(std::vector<cv::RotatedRect> light_boxes)
+{
+	std::vector<cv::RotatedRect> armor_boxes; // 装甲板矩形容器
+
+    for (int i = 0; i < light_boxes.size(); i++)    
+    {
+		bool skip_light = false;
+        for (int l=0;l<light_boxes.size();l++)
+
+			// if (skip_light = sp::bboxes_armor_isok(bboxes_light[k], bboxes_light[l]) && l!=k)// 筛选条件
+			// {
+			// 	bboxes_armor.push_back(sp::get_armor(bboxes_light[k], bboxes_light[l]));
+			// }
+    }
+    
+
+
+
+
+
+
+    return armor_boxes;
+}
+cv::RotatedRect get_armor(const cv::RotatedRect rect_l, const cv::RotatedRect rect_r)
+{
+
+}
+
+
+
+
+
+
+
+
+
+
+
+    
     // 判断两个灯条的角度差
 static bool angelJudge(const cv::RotatedRect &light_blob_i, const cv::RotatedRect &light_blob_j) {
     float angle_i = light_blob_i.size.width > light_blob_i.size.height ? light_blob_i.angle :

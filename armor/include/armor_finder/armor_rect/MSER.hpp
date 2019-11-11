@@ -33,83 +33,6 @@ float iou(const cv::Rect& lhs, const cv::Rect& rhs)
 	return static_cast<float>(inner_area) / (lhs.area() + rhs.area() - inner_area);
 }
 
-bool bboxes_light_is_ok(const cv::Mat& in, double max_val, double proportion, int thresh_value)
-{
-	cv::Mat in2;
-	int rows = in.rows;
-	int cols = in.cols;
-	
-	cv::cvtColor(in, in2, CV_RGB2HSV);
-	CvScalar scalar;
-
-	if(in.isContinuous())
-	{
-		cols *= rows;
-		rows = 1;
-	}
-
-	IplImage* ipl_in2 = cvCreateImage(cvSize(rows,cols), IPL_DEPTH_8U, 3);
-	*ipl_in2 = IplImage(in2);
-
-	std::vector<int> color_value(rows*cols);
-	int pos = 0;
-	for(int i=0;i<rows;i++)
-	{
-		for(int j=0;j<cols;j++)
-		{
-			scalar = cvGet2D(ipl_in2, i, j);
-			color_value[pos++] = (int)scalar.val[2];
-		}
-	}
-	std::nth_element(color_value.begin(), color_value.end()-rows*cols*proportion, color_value.end());
-	auto thre_iterator = color_value.end()-rows*cols*proportion;
-	int threshold_int = *thre_iterator;
-
-	// int threshold_int = (int)threshold;
-
-	#ifdef DEBUG
-	std::cout << "threshold=" << threshold_int << std::endl; //打印计算得出的threshold
-	#endif
-
-	if(threshold_int>=thresh_value) // 筛亮度
-	{
-		// hsv筛颜色
-
-		// 获得bboxes_light的中点坐标和中点hsv亮度
-		scalar = cvGet2D(ipl_in2, rows/2, cols/2);
-
-		if((int)scalar.val[1]>254
-			&& (int)scalar.val[1]<30
-			&& (int)scalar.val[2]>254)
-		{
-			#ifdef DEBUG
-			std::cout << "饱和度" << (int)scalar.val[1] << std::endl;
-			std::cout << "明度值" << (int)scalar.val[2] << std::endl;
-			#endif
-
-			return true;
-		}
-		else
-		{
-			#ifdef DEBUG
-			std::cout << "未获取HSV" << std::endl;
-			#endif
-		}
-		
-		#ifdef DEBUG
-		std::cout << "true" << std::endl;
-		#endif
-	}
-	else 
-	{
-		return false;
-		#ifdef DEBUG
-		std::cout << "false" << std::endl;
-		#endif
-	}
-	
-}
-
 bool bboxes_armor_isok(const cv::Rect& rect_l, const cv::Rect& rect_r)
 {
 	const double egde_l = std::min(rect_l.x, rect_r.x);
@@ -165,18 +88,8 @@ cv::Rect get_armor(const cv::Rect& rect_l, const cv::Rect& rect_r)
 }
 
 cv::Mat& mser(cv::Mat& mat, cv::Mat& mat_real)
-{
-	cv::Mat img_show;
-	
-	// cv::resize(mat, mat, {640, 480});
-	
-	double thresh_binar = 0.02; //二值化取thresh_binar最亮部分
-	double bbox_proportion_thresh_max = 0.1; //设定bbox的宽高比上阈值
-	double bbox_proportion_thresh_min = 0.0; //设定bbox的宽高比下阈值
-	constexpr float thresh_iou = 0.8; //IOU的阈值
-	int thresh_value = 250; // bboxes_light的色度阈值
+{	
 
-	sp::proportion_thresh(mat, mat, 255, thresh_binar); //二值化图像
 
 
 	auto mser = cv::MSER::create(	1, // _delta 灰度值的变化量
@@ -190,22 +103,6 @@ cv::Mat& mser(cv::Mat& mat, cv::Mat& mat_real)
 									5 // _edge_blur_size 
 									); 
 
-	// auto mser = cv::MSER::create(	5, // _delta 灰度值的变化量
-	// 								60, //_min_area 检测到的组块⾯积的范围
-	// 								14400, //_max_area 检测到的组块⾯积的范围
-	// 								0.25, //_max_variation 最⼤的变化率
-	// 								0.2, // _min_diversity 稳定区域的最⼩变换量
-	// 								200, // _max_evolution 对彩⾊图像的MSER检测
-	// 								1.01, // _area_threshold 
-	// 								0.003, // _min_margin 
-	// 								5 //  _edge_blur_size 
-	// 								); 
-									
-	std::vector<std::vector<cv::Point>> contours;
-	std::vector<cv::Rect>               bboxes; // 所有图块矩形
-	std::vector<cv::Rect>               bboxes_light; // 灯条矩形
-	std::vector<cv::Rect>               bboxes_armor; // 灯条匹配矩形
-	std::vector<cv::Rect>               bboxes_armor_selected; // 筛选后的灯条匹配矩形
 
 
 	mser->detectRegions(mat, contours, bboxes); // 检测边缘

@@ -34,11 +34,11 @@
 # include "other/include/timer.hpp"
 # include "other/include/drawText.hpp"
 # include "armor/include/show_images/show_images.hpp"
-# include "armor/include/armor_finder/MSER.hpp"
-# include "armor/include/armor_finder/color_filter.hpp"
-// # include "armor/include/armor_finder/PNP.hpp"
-// # include "armor/include/armor_finder/C-color.hpp"
-// # include "armor/include/armor_finder/distance.hpp"
+# include "armor/include/armor_finder/armor_rect/find_armor.hpp"
+# include "armor/include/armor_finder/image_processing/color_filter.hpp"
+// # include "armor/include/armor_finder/distance/PNP.hpp"
+// # include "armor/include/armor_finder/image_processing/C-color.hpp"
+// # include "armor/include/armor_finder/distance/distance.hpp"
 
 # ifdef USE_NEW_CODE //新代码在下面
 
@@ -101,13 +101,13 @@ int main()
             if(src.empty())
                 break;
 
-            src = sp::mser(src, src_real);
+            sp::findArmor(src, src_real);
             
             #ifdef SHOW_MONO_COLOR
             cv::imshow("image", src);
             #endif
 
-            cv::imshow("image_beforeMSER", src_real);
+            cv::imshow("Armor_Target", src_real);
 
             std::cout << "程序运行时间：" << timer.get() << "ms" << std::endl; //结束计时
 
@@ -131,6 +131,6 @@ int main()
 }
 
 
-#else //旧代码在下面 分RGB颜色
+#else
 
 #endif
