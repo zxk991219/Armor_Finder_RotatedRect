@@ -28,6 +28,18 @@ std::vector<cv::RotatedRect> findLightBox(cv::Mat& mat, cv::Mat& mat_real)
     std::cout << std::endl;
     # endif
 
+    #ifdef SHOW_CONTOURS
+    cv::Mat show_contours = mat_real;
+
+    for(int i=0; i<contours.size(); i++)
+    {
+        cv::drawContours(show_contours, contours, -1, {255,255,255});
+    }
+    cv::imshow("show_contours", show_contours);
+
+    #endif
+
+
 
     for(int i=0; i<contours.size(); i++) //遍历轮廓，获取符合要求的最小矩形，并将符合条件的最小矩形放入light_boxes灯条矩形容器
     {
@@ -82,10 +94,10 @@ std::vector<cv::RotatedRect> findLightBox(cv::Mat& mat, cv::Mat& mat_real)
             for (int i = 0; i < 4; i++)//画矩形
             {
                 #ifdef SHOW_MONO_COLOR				
-                line(mat, vertices[i], vertices[(i + 1) % 4], {255});
+                line(mat, vertices[i], vertices[(i + 1) % 4], {255}, 2, 8, 0);
                 #endif
 
-                line(mat_real, vertices[i], vertices[(i + 1) % 4], {255, 0, 0});
+                line(mat_real, vertices[i], vertices[(i + 1) % 4], {255, 0, 0}, 2, 8, 0);
 
             }
             #endif

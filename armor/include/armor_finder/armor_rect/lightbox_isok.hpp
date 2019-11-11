@@ -26,10 +26,14 @@ namespace sp
 		# ifdef DEBUG
         std::cout << "开始判断lightbox" << std::endl;
         std::cout << std::endl;
+		cv::Mat mat_imagepart_debug;
+        cv::resize(mat_imagepart,mat_imagepart_debug,cv::Size(640,480),(0,0), (0,0), CV_INTER_AREA);
+		cv::imshow("mat_imagepart", mat_imagepart_debug);
+		// cv::waitKey(0);
         # endif
 
 		double length_width_rate_thresh_max = 10; //设定bbox的宽长比上阈值
-		double length_width_rate_thresh_min = 1.2; //设定bbox的宽长比下阈值
+		double length_width_rate_thresh_min = 3; //设定bbox的宽长比下阈值
 		double thresh_binar = 0.02; //二值化取thresh_binar最亮部分
 		int thresh_value = 250; // bboxes_light的色度阈值
 
@@ -63,7 +67,8 @@ namespace sp
 	cv::Mat in2;
 	int rows = in.rows;
 	int cols = in.cols;
-	
+
+	cv::cvtColor(in, in2, CV_RGB2HSV);
 	CvScalar scalar;
 
 	if(in.isContinuous())
@@ -95,13 +100,29 @@ namespace sp
 
 	for(int i=0;i<rows;i++)
 	{
+		# ifdef DEBUG
+		std::cout << "开始遍历i：" << i << std::endl;
+		std::cout << std::endl;
+		# endif
+
 		for(int j=0;j<cols;j++)
 		{
+			# ifdef DEBUG
+			std::cout << "开始遍历j：" << j << std::endl;
+			std::cout << std::endl;
+			# endif
+
 			scalar = cvGet2D(ipl_in2, i, j);
+
+			# ifdef DEBUG
+			std::cout << "已获取(" << i << "," << j << ")点的像素值" << std::endl;
+			std::cout << std::endl;
+			# endif
+
 			color_value[pos++] = (int)scalar.val[2];
 
 			# ifdef DEBUG
-			std::cout << "已设定color_value容器，开始遍历hsv像素" << std::endl;
+			std::cout << "hsv像素值：" << color_value[pos-1] << std::endl;
 			std::cout << std::endl;
 			# endif
 		}
