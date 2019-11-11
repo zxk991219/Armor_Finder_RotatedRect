@@ -34,9 +34,12 @@ void findArmor(cv::Mat& mat, cv::Mat& mat_real)
     // double FACTOR = 2.5;
     // cv::Canny(), cannyThr, cannyThr*FACTOR); //Canny边缘检测
     
-
 	std::vector<cv::RotatedRect> armor_boxes; // 装甲板矩形容器
-    armor_boxes = sp::findArmorBox(sp::findLightBox(mat, mat_real));
+    // armor_boxes = sp::findArmorBox(mat_real, sp::findLightBox(mat, mat_real));
+
+    std::vector<cv::Rect> armor_boxes_up_right_rects;
+    armor_boxes_up_right_rects = sp::findArmorBox(mat_real, sp::findLightBox(mat, mat_real));
+
 
 }
 

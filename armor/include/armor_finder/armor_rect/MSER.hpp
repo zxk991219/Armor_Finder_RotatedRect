@@ -54,7 +54,7 @@ bool bboxes_armor_isok(const cv::Rect& rect_l, const cv::Rect& rect_r)
 	if
 	(bbox_armor_height/bbox_armor_width<0.5
 	&& bbox_armor_height/bbox_armor_width>0.2
-	
+
 	&& bbox_armor_height/bbox_light_height>0.9
 	&& bbox_armor_height/bbox_light_height<1.5
 	&& (std::abs(rect_l.y-rect_r.y)<(bbox_light_height/6.0))
@@ -72,21 +72,7 @@ bool bboxes_armor_isok(const cv::Rect& rect_l, const cv::Rect& rect_r)
 	else return false;
 }
 
-cv::Rect get_armor(const cv::Rect& rect_l, const cv::Rect& rect_r)
-{
-	const int egde_l = std::min(rect_l.x, rect_r.x);
-	const int egde_r = std::max(rect_l.x+rect_l.width, rect_r.x+rect_r.width);
-	// const int egde_d = std::min(rect_l.y-rect_l.height, rect_r.y-rect_r.height);
-	// const int egde_u = std::max(rect_l.y, rect_r.y);
-	const double egde_u = std::max(rect_l.y+rect_l.height, rect_r.y+rect_r.height);
-	const double egde_d = std::min(rect_l.y, rect_r.y);
-	
-	const int bbox_armor_width = egde_r - egde_l;
-	const int bbox_armor_height = egde_u - egde_d;
 
-	cv::Rect armor(egde_l, egde_d, bbox_armor_width, bbox_armor_height);
-	return armor;
-}
 
 cv::Mat& mser(cv::Mat& mat, cv::Mat& mat_real)
 {	

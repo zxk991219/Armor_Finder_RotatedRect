@@ -17,12 +17,20 @@
 
 namespace sp
 {
+bool angle_isok(const cv::RotatedRect rect_i, const cv::RotatedRect rect_j);
+bool center_height_isok(const cv::RotatedRect rect_i, const cv::RotatedRect rect_j);
+bool center_distance_isok(const cv::RotatedRect rect_i, const cv::RotatedRect rect_j);
+bool length_rate_isok(const cv::RotatedRect rect_i, const cv::RotatedRect rect_j);
+
+
+
+
 bool armorbox_isok(const cv::RotatedRect rect_i, const cv::RotatedRect rect_j)
 {
-	if(sp::angle_isok(const cv::RotatedRect rect_i, const cv::RotatedRect rect_j)
-	&& sp::center_height_isok(const cv::RotatedRect rect_i, const cv::RotatedRect rect_j)
-	&& sp::center_distance_isok(const cv::RotatedRect rect_i, const cv::RotatedRect rect_j)
-	&& sp::length_rate_isok(const cv::RotatedRect rect_i, const cv::RotatedRect rect_j))
+	if(sp::angle_isok(rect_i, rect_j)
+	&& sp::center_height_isok(rect_i, rect_j)
+	&& sp::center_distance_isok(rect_i, rect_j)
+	&& sp::length_rate_isok(rect_i, rect_j))
 	{
 		return true;
 	}
