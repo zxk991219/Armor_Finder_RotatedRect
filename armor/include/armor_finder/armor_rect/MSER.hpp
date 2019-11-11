@@ -54,6 +54,7 @@ bool bboxes_armor_isok(const cv::Rect& rect_l, const cv::Rect& rect_r)
 	if
 	(bbox_armor_height/bbox_armor_width<0.5
 	&& bbox_armor_height/bbox_armor_width>0.2
+	
 	&& bbox_armor_height/bbox_light_height>0.9
 	&& bbox_armor_height/bbox_light_height<1.5
 	&& (std::abs(rect_l.y-rect_r.y)<(bbox_light_height/6.0))
