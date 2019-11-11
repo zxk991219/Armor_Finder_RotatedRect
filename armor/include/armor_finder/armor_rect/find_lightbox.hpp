@@ -8,7 +8,7 @@
 namespace sp
 {
 std::vector<cv::RotatedRect> findLightBox(cv::Mat& mat, cv::Mat& mat_real)
-// mat是已经经过了RGB通道分离的图像
+//mat是已经经过了RGB通道分离的图像，mat_real是摄像头探测到的原图
 {
 	std::vector<std::vector<cv::Point>> contours; //轮廓容器
     std::vector<cv::RotatedRect> light_boxes; //灯条矩形容器
@@ -23,8 +23,31 @@ std::vector<cv::RotatedRect> findLightBox(cv::Mat& mat, cv::Mat& mat_real)
                     CV_CHAIN_APPROX_SIMPLE //仅保存轮廓的拐点信息，把所有轮廓拐点处的点保存入contours向量内，拐点与拐点之间直线段上的信息点不予保留
                     );
 
+    # ifdef DEBUG
+    std::cout << "找到" << contours.size() << "个轮廓,开始遍历轮廓" << std::endl;
+    std::cout << std::endl;
+    # endif
+
+    #ifdef SHOW_CONTOURS
+    cv::Mat show_contours = mat_real;
+
+    for(int i=0; i<contours.size(); i++)
+    {
+        cv::drawContours(show_contours, contours, -1, {255,255,255});
+    }
+    cv::imshow("show_contours", show_contours);
+
+    #endif
+
+
+
     for(int i=0; i<contours.size(); i++) //遍历轮廓，获取符合要求的最小矩形，并将符合条件的最小矩形放入light_boxes灯条矩形容器
     {
+        # ifdef DEBUG
+        std::cout << "开始遍历第" << i << "个轮廓" << std::endl;
+        std::cout << std::endl;
+        # endif
+
         cv::RotatedRect rect=minAreaRect(contours[i]);
         cv::Point2f vertices[4]; 
         rect.points(vertices); //获取旋转矩形四个顶点
@@ -36,21 +59,45 @@ std::vector<cv::RotatedRect> findLightBox(cv::Mat& mat, cv::Mat& mat_real)
         && vertices[0].y==vertices[3].y
         && vertices[0].y-vertices[1].y>0 
         && vertices[3].x-vertices[0].x>0 ))
-        continue; //过滤相同的矩形
+        {
+            # ifdef DEBUG
+            std::cout << "过滤相同的矩形成功" << std::endl;
+            std::cout << std::endl;
+            # endif
+
+            continue; //过滤相同的矩形
+        }
+
+        
+        # ifdef DEBUG
+        std::cout << "开始获取image_part" << std::endl;
+        std::cout << std::endl;
+        # endif
+
 
         cv::Mat mat_imagepart = sp::rotateRectToMat(mat_real, rect);
 
+        # ifdef DEBUG
+        std::cout << "获取image_part成功" << std::endl;
+        std::cout << std::endl;
+        # endif
+
         if(sp::lightbox_isok(mat_imagepart, rect))
         {
+            # ifdef DEBUG
+            std::cout << "判断lightbox结束" << std::endl;
+            std::cout << std::endl;
+            # endif
+
             // 画灯条矩形
             #ifdef SHOW_LIGHT
             for (int i = 0; i < 4; i++)//画矩形
             {
                 #ifdef SHOW_MONO_COLOR				
-                line(mat, vertices[i], vertices[(i + 1) % 4], Scalar(255));
+                line(mat, vertices[i], vertices[(i + 1) % 4], {255}, 2, 8, 0);
                 #endif
 
-                line(mat_real, vertices[i], vertices[(i + 1) % 4], Scalar(255, 0, 0));
+                line(mat_real, vertices[i], vertices[(i + 1) % 4], {255, 0, 0}, 2, 8, 0);
 
             }
             #endif

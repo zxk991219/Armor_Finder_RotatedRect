@@ -8,9 +8,7 @@
 namespace sp
 {
 void get_armor(cv::Mat& mat_real, const cv::RotatedRect rect_i, const cv::RotatedRect rect_j);
-
 cv::Rect get_armor_up_right_rect(const cv::RotatedRect rect_i, const cv::RotatedRect rect_j);
-
 
 // std::vector<cv::RotatedRect> findArmorBox(cv::Mat& mat_real, std::vector<cv::RotatedRect> light_boxes)
 std::vector<cv::Rect> findArmorBox(cv::Mat& mat_real, std::vector<cv::RotatedRect> light_boxes)
@@ -53,17 +51,10 @@ void get_armor(cv::Mat& mat_real, const cv::RotatedRect rect_i, const cv::Rotate
 
     cv::Point2f vertices_dual_light[4];
 
-    cv::Point2f vertices_dual_light[0] //bottom_left
-    = (vertices_i[0].x < vertices_j[0].x ? vertices_i[0] : vertices_j[0]);
-  
-    cv::Point2f vertices_dual_light[1] //top_left
-    = (vertices_i[1].x < vertices_j[1].x ? vertices_i[1] : vertices_j[1]);
-
-    cv::Point2f vertices_dual_light[2] //top_right
+    vertices_dual_light[2] //top_right
     = (vertices_i[2].x > vertices_j[2].x ? vertices_i[2] : vertices_j[2]);
 
-    cv::Point2f vertices_dual_light[3] // bottom_right
-    = (vertices_i[3].x > vertices_j[3].x ? vertices_i[3] : vertices_j[3]);
+    vertices_dual_light[3] // bottom_right
 
     # ifdef SHOW_ARMOR
     for (size_t i = 0; i < 4; i++)
