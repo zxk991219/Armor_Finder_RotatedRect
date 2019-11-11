@@ -15,7 +15,7 @@
 namespace sp
 {
 
-    void get_distance(cv::Mat& frame, cv::Point2f& pts[4])
+    void get_distance(cv::Mat& frame, cv::Point2f pts[4])
 {   
     double m[3][3] = {{1056.641597953005, 0, 958.1078670170519}, { 0, 1055.821668018513, 558.7308899751256}, {0, 0, 1}};
     cv::Mat cam= cv::Mat(3, 3, CV_64F, m);//相机内参
@@ -31,7 +31,7 @@ namespace sp
         cv::Point2f(pts[2]),
         cv::Point2f(pts[3]),
         cv::Point2f(pts[0])
-    };//设置像素坐标
+    };//设置像素坐标不规则矩形
     std::vector<cv::Point3f> obj=std::vector<cv::Point3f>{
             cv::Point3f(-HALF_WIDTH, -HALF_HEIGHT, 0),	//tl
             cv::Point3f(HALF_WIDTH, -HALF_HEIGHT, 0),	//tr
