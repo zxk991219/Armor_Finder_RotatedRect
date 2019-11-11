@@ -19,4 +19,23 @@ cv::Mat rotateRectToMat(cv::Mat& mat_real, cv::RotatedRect rect)
 	
 	return mat_imagepart;
 }
+
+bool rotateRectToMat_isok(cv::Mat& mat_real, cv::RotatedRect rect)
+{
+	cv::Point2f center = rect.center;//外接矩形中心点坐标
+	cv::Rect rect_imagepart = cv::Rect(center.x - (rect.size.width / 2), center.y - (rect.size.height/2), rect.size.width, rect.size.height);
+	if(
+		(0<rect_imagepart.tl().y && rect_imagepart.tl().y<mat_real.rows //左上
+		&&0<rect_imagepart.tl().x && rect_imagepart.tl().x<mat_real.cols 
+		&&0<rect_imagepart.tl().y+rect_imagepart.height 
+		&& rect_imagepart.tl().y+rect_imagepart.height<mat_real.rows //左下
+
+		&&0<rect_imagepart.br().y && rect_imagepart.br().y<mat_real.rows //右下
+		&&0<rect_imagepart.br().x && rect_imagepart.br().x<mat_real.cols
+		&&0<rect_imagepart.br().y-rect_imagepart.height
+		&& rect_imagepart.br().y-rect_imagepart.height<mat_real.rows //右上
+		)
+    )return true;
+	else return false;
+}
 }

@@ -26,10 +26,6 @@ namespace sp
 		# ifdef DEBUG
         std::cout << "开始判断lightbox" << std::endl;
         std::cout << std::endl;
-		cv::Mat mat_imagepart_debug;
-        cv::resize(mat_imagepart,mat_imagepart_debug,cv::Size(640,480),(0,0), (0,0), CV_INTER_AREA);
-		cv::imshow("mat_imagepart", mat_imagepart_debug);
-		// cv::waitKey(0);
         # endif
 
 		double length_width_rate_thresh_max = 10; //设定bbox的宽长比上阈值

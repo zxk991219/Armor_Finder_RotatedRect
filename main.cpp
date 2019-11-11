@@ -3,7 +3,6 @@
 #endif
 
 #ifdef DEBUG
-
 #undef DEBUG
 #endif
 
@@ -117,6 +116,7 @@ int main()
 
             if(cv::waitKey(10) >= 10)
                 break;
+            // cv::waitKey(0); //逐帧播放
         }
     }
 
