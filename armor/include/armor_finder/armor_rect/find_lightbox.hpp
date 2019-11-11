@@ -30,13 +30,11 @@ std::vector<cv::RotatedRect> findLightBox(cv::Mat& mat, cv::Mat& mat_real)
 
     #ifdef SHOW_CONTOURS
     cv::Mat show_contours = mat_real;
-
     for(int i=0; i<contours.size(); i++)
     {
         cv::drawContours(show_contours, contours, -1, {255,255,255});
     }
     cv::imshow("show_contours", show_contours);
-
     #endif
 
 
