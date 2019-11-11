@@ -18,6 +18,7 @@
 namespace sp
 {
 bool armorbox_isok()
+
 }
 
 

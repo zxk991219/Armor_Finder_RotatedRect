@@ -15,7 +15,7 @@
 namespace sp
 {
 
-    void get_distance(cv::Mat& frame, cv::RotatedRect& bboxes_armor)
+    void get_distance(cv::Mat& frame, cv::Point2f& pts[4])
 {   
     double m[3][3] = {{1056.641597953005, 0, 958.1078670170519}, { 0, 1055.821668018513, 558.7308899751256}, {0, 0, 1}};
     cv::Mat cam= cv::Mat(3, 3, CV_64F, m);//相机内参
@@ -25,9 +25,7 @@ namespace sp
     // fs["camera_matrix"] >> cam;
     // fs["distortion_coefficients"] >> dis;//传入相机的内参和外参
 
-    cv::RotatedRect rect=bboxes_armor;
-    cv::Point2f  pts[4];
-    rect.points(pts);
+
     std::vector<cv::Point2f> pnts=std::vector<cv::Point2f>{
         cv::Point2f(pts[1]),
         cv::Point2f(pts[2]),
