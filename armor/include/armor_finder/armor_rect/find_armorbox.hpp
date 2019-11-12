@@ -6,7 +6,7 @@
 # include "../distance/PNP.hpp"
 # include "../image_processing/classifier.hpp"
 # include "../image_processing/quadrilateral_to_mat.hpp"
-
+# include "../../../../other/include/drawText_quadrilateral.hpp"
 
 
 namespace sp
@@ -48,33 +48,81 @@ std::vector<cv::Rect> findArmorBox(cv::Mat& mat_real, std::vector<cv::RotatedRec
 //画出装甲板
 void get_armor(cv::Mat& mat_real, const cv::RotatedRect rect_i, const cv::RotatedRect rect_j)
 {
-    cv::RotatedRect rect_l = rect_i.center.x < rect_j.center.x ? rect_i : rect_j;
-    cv::RotatedRect rect_r = rect_i.center.x > rect_j.center.x ? rect_i : rect_j;
+    cv::RotatedRect rect_l_pre = rect_i.center.x < rect_j.center.x ? rect_i : rect_j;
+    cv::RotatedRect rect_r_pre = rect_i.center.x > rect_j.center.x ? rect_i : rect_j;
+    
+    cv::RotatedRect rect_r;
+    cv::RotatedRect rect_l;
 
     cv::Point2f vertices_l[4];
-    rect_l.points(vertices_l);
-
-
     cv::Point2f vertices_r[4];
-    rect_r.points(vertices_r);
 
-    if(vertices_l[0].y==vertices_l[1].y)
-    {
-        cv::Point temp = vertices_l[0];
-        vertices_l[0] = vertices_l[1];
-        vertices_l[1] = vertices_l[2];
-        vertices_l[2] = vertices_l[3];
-        vertices_l[3] = temp;
-    }
 
-    if(vertices_r[0].y==vertices_r[1].y)
+    #ifdef DEBUG
+    std::cout << "左pre矩形角度: " << rect_l_pre.angle <<std::endl;
+    #endif
+
+    #ifdef DEBUG
+    std::cout << "右pre矩形角度: " << rect_r_pre.angle <<std::endl;
+    #endif
+
+    if(-89.9<rect_l_pre.angle && rect_l_pre.angle< -75.0)
     {
-        cv::Point temp = vertices_r[0];
-        vertices_r[0] = vertices_r[1];
-        vertices_r[1] = vertices_r[2];
-        vertices_r[2] = vertices_r[3];
-        vertices_r[3] = temp;
+        rect_l = cv::RotatedRect(rect_l_pre.center, rect_l_pre.size, -90);
+
+        rect_l.points(vertices_l);
     }
+    else
+    {
+        rect_l = rect_l_pre;
+
+        rect_l.points(vertices_l);
+
+        if(vertices_l[0].y==vertices_l[1].y)
+        {
+            cv::Point temp = vertices_l[0];
+            vertices_l[0] = vertices_l[1];
+            vertices_l[1] = vertices_l[2];
+            vertices_l[2] = vertices_l[3];
+            vertices_l[3] = temp;
+        }
+    }
+        
+    
+    if(-89.9<rect_r_pre.angle && rect_r_pre.angle< -75.0)
+    {
+        rect_r = cv::RotatedRect(rect_r_pre.center, rect_r_pre.size, -90);
+
+        rect_r.points(vertices_r);
+    }
+    else
+    {
+        rect_r = rect_r_pre;
+
+        rect_r.points(vertices_r);
+
+        if(vertices_r[0].y==vertices_r[1].y)
+        {
+            cv::Point temp = vertices_r[0];
+            vertices_r[0] = vertices_r[1];
+            vertices_r[1] = vertices_r[2];
+            vertices_r[2] = vertices_r[3];
+            vertices_r[3] = temp;
+        }
+    }
+        
+
+    #ifdef DEBUG
+    std::cout << "左矩形角度: " << rect_l.angle <<std::endl;
+    #endif
+
+    #ifdef DEBUG
+    std::cout << "右矩形角度: " << rect_r.angle <<std::endl;
+    #endif
+
+
+
+    
 
     # ifdef DEBUG
     std::cout << "旋转坐标成功" << std::endl;
@@ -327,6 +375,7 @@ if(rect_l.size.width<rect_l.size.height)
     #ifdef DEBUG
     std::cout << "成功读取armor_imagepart" << std::endl;
     cv::imshow("armor_imagepart", armor_imagepart);
+    #endif
 
     #ifdef DEBUG
     std::cout << std::endl;
@@ -337,28 +386,32 @@ if(rect_l.size.width<rect_l.size.height)
     std::cout << std::endl;
     #endif
 
-    #endif
-
-    # ifdef SHOW_ARMOR
-    for (int i = 0; i < 4; i++)
-    {
-        cv::line(mat_real, vertices_armor[i], vertices_armor[(i + 1) % 4], cv::Scalar(0, 255, 0), 2, 8, 0);
-    }
-    # endif
-    
+    // #ifdef DEBUG
+    // for (int i = 0; i < 4; i++)
+    // {
+    // cv::line(mat_real, vertices_armor[i], vertices_armor[(i + 1) % 4], cv::Scalar(0, 255, 0), 2, 8, 0);
+    // }
+    // #endif
 
     // 分类器
-    if(sp::classifier(armor_imagepart, "../Video/image/src/armor/image_positive_list.txt"))
+    // 分类器获取装甲板编号
+	int num_armor = sp::classifier(armor_imagepart, "../Video/image/src/armor/image_positive_list.txt");
+    if(num_armor!=0)
     {
         // PNP获取距离和角度
         sp::get_distance(mat_real, vertices_dual_light);
         // sp::get_distance(mat_real, vertices_armor);
 
+        // 在原图上显示装甲板编号
+		std::string num_armor_str = std::to_string(num_armor);
+		sp::drawText_quadrilateral(mat_real, vertices_armor[0], "#"+num_armor_str);
+
 
         # ifdef SHOW_ARMOR
         for (int i = 0; i < 4; i++)
         {
-            cv::line(mat_real, vertices_dual_light[i], vertices_dual_light[(i + 1) % 4], cv::Scalar(0, 255, 0), 2, 8, 0);
+            cv::line(mat_real, vertices_armor[i], vertices_armor[(i + 1) % 4], cv::Scalar(0, 255, 0), 2, 8, 0);
+            // cv::line(mat_real, vertices_dual_light[i], vertices_dual_light[(i + 1) % 4], cv::Scalar(0, 255, 0), 2, 8, 0);
         }
         # endif
     }
