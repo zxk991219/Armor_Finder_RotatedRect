@@ -48,33 +48,81 @@ std::vector<cv::Rect> findArmorBox(cv::Mat& mat_real, std::vector<cv::RotatedRec
 //画出装甲板
 void get_armor(cv::Mat& mat_real, const cv::RotatedRect rect_i, const cv::RotatedRect rect_j)
 {
-    cv::RotatedRect rect_l = rect_i.center.x < rect_j.center.x ? rect_i : rect_j;
-    cv::RotatedRect rect_r = rect_i.center.x > rect_j.center.x ? rect_i : rect_j;
+    cv::RotatedRect rect_l_pre = rect_i.center.x < rect_j.center.x ? rect_i : rect_j;
+    cv::RotatedRect rect_r_pre = rect_i.center.x > rect_j.center.x ? rect_i : rect_j;
+    
+    cv::RotatedRect rect_r;
+    cv::RotatedRect rect_l;
 
     cv::Point2f vertices_l[4];
-    rect_l.points(vertices_l);
-
-
     cv::Point2f vertices_r[4];
-    rect_r.points(vertices_r);
 
-    if(vertices_l[0].y==vertices_l[1].y)
-    {
-        cv::Point temp = vertices_l[0];
-        vertices_l[0] = vertices_l[1];
-        vertices_l[1] = vertices_l[2];
-        vertices_l[2] = vertices_l[3];
-        vertices_l[3] = temp;
-    }
 
-    if(vertices_r[0].y==vertices_r[1].y)
+    #ifdef DEBUG
+    std::cout << "左pre矩形角度: " << rect_l_pre.angle <<std::endl;
+    #endif
+
+    #ifdef DEBUG
+    std::cout << "右pre矩形角度: " << rect_r_pre.angle <<std::endl;
+    #endif
+
+    if(-89.9<rect_l_pre.angle && rect_l_pre.angle< -75.0)
     {
-        cv::Point temp = vertices_r[0];
-        vertices_r[0] = vertices_r[1];
-        vertices_r[1] = vertices_r[2];
-        vertices_r[2] = vertices_r[3];
-        vertices_r[3] = temp;
+        rect_l = cv::RotatedRect(rect_l_pre.center, rect_l_pre.size, -90);
+
+        rect_l.points(vertices_l);
     }
+    else
+    {
+        rect_l = rect_l_pre;
+
+        rect_l.points(vertices_l);
+
+        if(vertices_l[0].y==vertices_l[1].y)
+        {
+            cv::Point temp = vertices_l[0];
+            vertices_l[0] = vertices_l[1];
+            vertices_l[1] = vertices_l[2];
+            vertices_l[2] = vertices_l[3];
+            vertices_l[3] = temp;
+        }
+    }
+        
+    
+    if(-89.9<rect_r_pre.angle && rect_r_pre.angle< -75.0)
+    {
+        rect_r = cv::RotatedRect(rect_r_pre.center, rect_r_pre.size, -90);
+
+        rect_r.points(vertices_r);
+    }
+    else
+    {
+        rect_r = rect_r_pre;
+
+        rect_r.points(vertices_r);
+
+        if(vertices_r[0].y==vertices_r[1].y)
+        {
+            cv::Point temp = vertices_r[0];
+            vertices_r[0] = vertices_r[1];
+            vertices_r[1] = vertices_r[2];
+            vertices_r[2] = vertices_r[3];
+            vertices_r[3] = temp;
+        }
+    }
+        
+
+    #ifdef DEBUG
+    std::cout << "左矩形角度: " << rect_l.angle <<std::endl;
+    #endif
+
+    #ifdef DEBUG
+    std::cout << "右矩形角度: " << rect_r.angle <<std::endl;
+    #endif
+
+
+
+    
 
     # ifdef DEBUG
     std::cout << "旋转坐标成功" << std::endl;

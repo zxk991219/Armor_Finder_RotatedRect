@@ -29,7 +29,7 @@
 // #define SHOW_ARMOR_WHOLE //显示完整装甲板矩形
 // #define SHOW_DISTANCE //显示距离
 // #define SHOW_CONTOURS
-#define FRAME_BY_FRAME
+// #define FRAME_BY_FRAME
 // #define CLASSIFIER_OUTPUT //输出分类器结果到"Video/image/dst/negative/和positive"
 
 
