@@ -18,6 +18,7 @@
 #define DEBUG
 #define USE_NEW_CODE
 
+// #define SHOW_DEBUG_HSV
 // #define SHOW_MEDIANBLUR
 // #define SHOW_MONO_COLOR //显示RGB通道分离结果
 // #define SHOW_IMAGEPART_LIGHT //显示灯条矩形截图

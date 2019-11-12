@@ -103,21 +103,21 @@ namespace sp
 
 		for(int j=0;j<cols;j++)
 		{
-			# ifdef DEBUG
+			# ifdef SHOW_DEBUG_HSV
 			std::cout << "开始遍历j：" << j << std::endl;
 			std::cout << std::endl;
 			# endif
 
 			scalar = cvGet2D(ipl_in2, i, j);
 
-			# ifdef DEBUG
+			# ifdef SHOW_DEBUG_HSV
 			std::cout << "已获取(" << i << "," << j << ")点的像素值" << std::endl;
 			std::cout << std::endl;
 			# endif
 
 			color_value[pos++] = (int)scalar.val[2];
 
-			# ifdef DEBUG
+			# ifdef SHOW_DEBUG_HSV
 			std::cout << "hsv像素值：" << color_value[pos-1] << std::endl;
 			std::cout << std::endl;
 			# endif
