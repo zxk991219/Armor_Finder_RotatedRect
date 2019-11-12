@@ -26,7 +26,7 @@ void findArmor(cv::Mat& mat, cv::Mat& mat_real)
     #endif
 
 	double thresh_binar = 0.02; //二值化取thresh_binar最亮部分
-	sp::proportion_thresh(mat, mat, 255, thresh_binar); //二值化图像
+	proportion_thresh(mat, mat, 255, thresh_binar); //二值化图像
     //可以用Canny、拉普拉斯等边缘检测算子处理二值图像
 
     //Canny处理图像
@@ -38,7 +38,7 @@ void findArmor(cv::Mat& mat, cv::Mat& mat_real)
     // armor_boxes = sp::findArmorBox(mat_real, sp::findLightBox(mat, mat_real));
 
     std::vector<cv::Rect> armor_boxes_up_right_rects;
-    armor_boxes_up_right_rects = sp::findArmorBox(mat_real, sp::findLightBox(mat, mat_real));
+    armor_boxes_up_right_rects = findArmorBox(mat_real, sp::findLightBox(mat, mat_real));
 
 
 }

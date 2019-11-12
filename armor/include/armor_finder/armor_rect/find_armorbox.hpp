@@ -250,7 +250,8 @@ if(rect_l.size.width<rect_l.size.height)
             std::cout << "vertices_armor[1] first x:" <<vertices_armor[1].x << "y:" << vertices_armor[1].y <<std::endl;
             #endif
 
-            #ifdef DEBUGif(rect_l.size.width<rect_l.size.height)
+            #ifdef DEBUG
+            if(rect_l.size.width<rect_l.size.height)
         {
             #ifdef DEBUG
             std::cout << "左矩形左斜" <<std::endl;
@@ -284,7 +285,7 @@ if(rect_l.size.width<rect_l.size.height)
             std::cout << "vertices_armor[1] first x:" <<vertices_armor[1].x << "y:" << vertices_armor[1].y <<std::endl;
             #endif
 
-            std::cout << "vertices_armor[0]if(rect_l.size.width<rect_l.size.height)
+            //std::cout << "vertices_armor[0]if(rect_l.size.width<rect_l.size.height)
         {
             #ifdef DEBUG
             std::cout << "左矩形左斜" <<std::endl;
@@ -317,7 +318,7 @@ if(rect_l.size.width<rect_l.size.height)
             #ifdef DEBUG
             std::cout << "vertices_armor[1] first x:" <<vertices_armor[1].x << "y:" << vertices_armor[1].y <<std::endl;
             #endif
- first x:" <<vertices_armor[0].x << "y:" << vertices_armor[0].y <<std::endl;
+ //first x:" <<vertices_armor[0].x << "y:" << vertices_armor[0].y <<std::endl;
             #endif
         }
 
@@ -419,10 +420,10 @@ if(rect_l.size.width<rect_l.size.height)
 
 
 
-}
+    }
 
 cv::Rect get_armor_up_right_rect(const cv::RotatedRect rect_i, const cv::RotatedRect rect_j)
-{
+ {
     cv::Rect up_right_rect_i = rect_i.boundingRect();
     cv::Rect up_right_rect_j = rect_j.boundingRect();
 
@@ -438,5 +439,5 @@ cv::Rect get_armor_up_right_rect(const cv::RotatedRect rect_i, const cv::Rotated
 
 	cv::Rect armor_up_right_rect(egde_i, egde_d, bbox_armor_width, bbox_armor_height);
 	return armor_up_right_rect;
-}
+ }
 }

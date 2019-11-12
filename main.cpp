@@ -6,8 +6,8 @@
 #undef DEBUG
 #endif
 
-#define USE_VIDEO
-// #define USE_CAMERA
+// #define USE_VIDEO
+#define USE_CAMERA
 
 #define USE_RED
 // #define USE_BLUE
@@ -42,7 +42,7 @@
 # include "armor/include/show_images/show_images.hpp"
 # include "armor/include/armor_finder/armor_rect/find_armor.hpp"
 # include "armor/include/armor_finder/image_processing/color_filter.hpp"
-// # include "armor/include/armor_finder/distance/PNP.hpp"
+# include "armor/include/armor_finder/distance/PNP.hpp"
 // # include "armor/include/armor_finder/image_processing/C-color.hpp"
 // # include "armor/include/armor_finder/distance/distance.hpp"
 
