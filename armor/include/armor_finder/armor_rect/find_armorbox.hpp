@@ -66,7 +66,7 @@ void get_armor(cv::Mat& mat_real, const cv::RotatedRect rect_i, const cv::Rotate
     std::cout << "右pre矩形角度: " << rect_r_pre.angle <<std::endl;
     #endif
 
-    if(-89.9<rect_l_pre.angle && rect_l_pre.angle< -75.0)
+    if(-89.9<rect_l_pre.angle && rect_l_pre.angle< -85.0)
     {
         rect_l = cv::RotatedRect(rect_l_pre.center, rect_l_pre.size, -90);
 
@@ -89,7 +89,7 @@ void get_armor(cv::Mat& mat_real, const cv::RotatedRect rect_i, const cv::Rotate
     }
         
     
-    if(-89.9<rect_r_pre.angle && rect_r_pre.angle< -75.0)
+    if(-89.9<rect_r_pre.angle && rect_r_pre.angle< -85.0)
     {
         rect_r = cv::RotatedRect(rect_r_pre.center, rect_r_pre.size, -90);
 
@@ -311,7 +311,14 @@ void get_armor(cv::Mat& mat_real, const cv::RotatedRect rect_i, const cv::Rotate
         # ifdef SHOW_ARMOR
         for (int i = 0; i < 4; i++)
         {
-            cv::line(mat_real, vertices_armor[i], vertices_armor[(i + 1) % 4], cv::Scalar(0, 255, 0), 2, 8, 0);
+            #ifdef USE_RED
+            cv::line(mat_real, vertices_armor[i], vertices_armor[(i + 1) % 4], cv::Scalar(0, 0, 255), 2, 8, 0);
+            #endif
+
+            #ifdef USE_BLUE
+            cv::line(mat_real, vertices_armor[i], vertices_armor[(i + 1) % 4], cv::Scalar(255, 0, 0), 2, 8, 0);
+            #endif
+
             // cv::line(mat_real, vertices_dual_light[i], vertices_dual_light[(i + 1) % 4], cv::Scalar(0, 255, 0), 2, 8, 0);
         }
         # endif

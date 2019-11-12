@@ -144,9 +144,10 @@ namespace sp
 		// 获得bboxes_light的中点坐标和中点hsv亮度
 		scalar = cvGet2D(ipl_in2, rows/2, cols/2);
 
-		if((int)scalar.val[1]>254
-			&& (int)scalar.val[1]<30
-			&& (int)scalar.val[2]>254)
+		if((int)scalar.val[2]>240
+			// && (int)scalar.val[1]>254
+			// && (int)scalar.val[1]<30
+			)
 		{
 			#ifdef DEBUG
 			std::cout << "饱和度" << (int)scalar.val[1] << std::endl;

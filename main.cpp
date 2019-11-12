@@ -6,8 +6,8 @@
 #undef DEBUG
 #endif
 
-#define USE_VIDEO
-// #define USE_CAMERA
+// #define USE_VIDEO
+#define USE_CAMERA
 
 #define USE_RED
 // #define USE_BLUE
@@ -30,7 +30,7 @@
 // #define SHOW_DISTANCE //显示距离
 // #define SHOW_CONTOURS
 // #define FRAME_BY_FRAME
-// #define CLASSIFIER_OUTPUT //输出分类器结果到"Video/image/dst/negative/和positive"
+#define CLASSIFIER_OUTPUT //输出分类器结果到"Video/image/dst/negative/和positive"
 
 
 
@@ -58,14 +58,23 @@ int main()
     capture.open("/dev/v4l/by-path/pci-0000:00:14.0-usb-0:1:1.0-video-index0",CV_CAP_V4L);
     sp::capture_set(capture, 640,//WIDTH
                               480,//HEIGHT
-                              30,//FPS
-                             -64,//BRIGHTNESS,
+                              20,//FPS
+                              64,//BRIGHTNESS,
                               64,//CONTRAST, 
                               128,//SATURATION
                               40,//HUE, const int 
-                              70//EXPOSURE
+                              0.003//EXPOSURE
                     );
     //capture.open(1)
+    // capture.set(3, 640);//宽度 
+    // capture.set(4, 480);//高度
+    // capture.set(5, 20);//帧数
+    // capture.set(10, 50);//亮度 1
+    // capture.set(11,64);//对比度 40
+    // capture.set(12, 128);//饱和度 50
+    // capture.set(13, 40);//色调 50
+
+    capture.set(cv::CAP_PROP_EXPOSURE, 0.003);//曝光 50
     cv::Mat src;
     cv::Mat src_real;
     capture >> src_real; 

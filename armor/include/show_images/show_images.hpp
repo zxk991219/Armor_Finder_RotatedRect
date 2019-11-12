@@ -26,13 +26,18 @@ namespace sp
      const int HEIGHT, const int FPS, const int BRIGHTNESS,
      const int CONTRAST, const int SATURATION, const int HUE, const int EXPOSURE)
     {
-    capture.set(3, WIDTH);//宽度 
-    capture.set(4, HEIGHT);//高度
-    capture.set(5, FPS);//帧数
-    capture.set(10, BRIGHTNESS);//亮度 1
-    capture.set(11,CONTRAST);//对比度 40
-    capture.set(12, SATURATION);//饱和度 50
-    capture.set(13, HUE);//色调 50
-    capture.set(15, EXPOSURE);//曝光 50
+    capture.set(CV_CAP_PROP_FRAME_WIDTH, WIDTH);//宽度 
+    capture.set(CV_CAP_PROP_FRAME_HEIGHT, HEIGHT);//高度
+    capture.set(CV_CAP_PROP_FPS, FPS);//帧数
+    capture.set(CV_CAP_PROP_BRIGHTNESS, BRIGHTNESS);//亮度
+    capture.set(CV_CAP_PROP_CONTRAST,CONTRAST);//对比度
+    capture.set(CV_CAP_PROP_SATURATION, SATURATION);//饱和度 50
+    capture.set(CV_CAP_PROP_HUE, HUE);//色调
+    capture.set(CV_CAP_PROP_EXPOSURE, EXPOSURE);//曝光
+
+    #ifdef DEBUG
+    
+    #endif
+
     }
 }
