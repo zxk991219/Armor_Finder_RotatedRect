@@ -20,7 +20,7 @@ std::vector<cv::RotatedRect> findLightBox(cv::Mat& mat, cv::Mat& mat_real)
     cv::findContours(mat, 
                     contours, 
                     CV_RETR_LIST, // 检测所有的轮廓，包括内围、外围轮廓，但是检测到的轮廓不建立等级关系
-                    CV_CHAIN_APPROX_SIMPLE //仅保存轮廓的拐点信息，把所有轮廓拐点处的点保存入contours向量内，拐点与拐点之间直线段上的信息点不予保留
+                    CV_CHAIN_APPROX_NONE //仅保存轮廓的拐点信息，把所有轮廓拐点处的点保存入contours向量内，拐点与拐点之间直线段上的信息点不予保留
                     );
 
     # ifdef DEBUG
@@ -51,12 +51,16 @@ std::vector<cv::RotatedRect> findLightBox(cv::Mat& mat, cv::Mat& mat_real)
         rect.points(vertices); //获取旋转矩形四个顶点
         cv::Point2f center = rect.center;//外接矩形中心点坐标
 
-        if(!(vertices[1].x==vertices[0].x 
-        && vertices[2].x==vertices[3].x 
-        && vertices[1].y==vertices[2].y 
-        && vertices[0].y==vertices[3].y
-        && vertices[0].y-vertices[1].y>0 
-        && vertices[3].x-vertices[0].x>0) )
+        if(
+            !(0<vertices[0].y && vertices[0].y<mat.rows
+            &&0<vertices[0].x && vertices[0].x<mat.cols
+            &&0<vertices[1].y && vertices[1].y<mat.rows
+            &&0<vertices[1].x && vertices[1].x<mat.cols
+            &&0<vertices[2].y && vertices[2].y<mat.rows
+            &&0<vertices[2].x && vertices[2].x<mat.cols
+            &&0<vertices[3].y && vertices[3].y<mat.rows
+            &&0<vertices[3].x && vertices[3].x<mat.cols)
+        )
         {
             # ifdef DEBUG
             std::cout << "过滤相同的矩形成功" << std::endl;
@@ -71,7 +75,16 @@ std::vector<cv::RotatedRect> findLightBox(cv::Mat& mat, cv::Mat& mat_real)
         std::cout << "开始获取image_part" << std::endl;
         std::cout << std::endl;
         # endif
+        
+        if(!rotateRectToMat_isok(mat_real, rect)) 
+        {       
+        # ifdef DEBUG
+        std::cout << "rotate_rect旋转出界" << std::endl;
+        std::cout << std::endl;
+        # endif
 
+        continue;
+        }
 
         cv::Mat mat_imagepart = sp::rotateRectToMat(mat_real, rect);
 
@@ -79,6 +92,8 @@ std::vector<cv::RotatedRect> findLightBox(cv::Mat& mat, cv::Mat& mat_real)
         std::cout << "获取image_part成功" << std::endl;
         std::cout << std::endl;
         # endif
+
+        if(mat_imagepart.empty()) continue;
 
         if(sp::lightbox_isok(mat_imagepart, rect))
         {

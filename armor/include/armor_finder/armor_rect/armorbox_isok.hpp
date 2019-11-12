@@ -63,11 +63,14 @@ bool center_height_isok(const cv::RotatedRect rect_i, const cv::RotatedRect rect
 bool center_distance_isok(const cv::RotatedRect rect_i, const cv::RotatedRect rect_j)
 // 判断两个灯条中心的距离是否合适
 {
+	double rect_i_height = 
+	rect_i.size.width < rect_i.size.height ? rect_i.size.height : rect_i.size.width;
+
 	double center_distance;
     cv::Point2f centers = rect_i.center - rect_j.center;
     center_distance = sqrt(centers.ddot(centers));
-	if(center_distance / rect_i.size.height < 10 
-	&& center_distance / rect_i.size.height > 0.5)
+	if(center_distance / rect_i_height < 6 
+	&& center_distance / rect_i_height > 0.5)
 	{
 		return true;
 	}
