@@ -67,7 +67,7 @@ std::vector<cv::RotatedRect> findLightBox(cv::Mat& mat, cv::Mat& mat_real)
             std::cout << std::endl;
             # endif
 
-            continue; //过滤相同的矩形
+            continue; //确保
         }
 
         
