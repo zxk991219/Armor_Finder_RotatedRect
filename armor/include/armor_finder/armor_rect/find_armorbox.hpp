@@ -51,13 +51,20 @@ void get_armor(cv::Mat& mat_real, const cv::RotatedRect rect_i, const cv::Rotate
 
     cv::Point2f vertices_dual_light[4];
 
+    vertices_dual_light[0] //top_right
+    = (vertices_i[0].x < vertices_j[0].x ? vertices_i[0] : vertices_j[0]);
+
+    vertices_dual_light[1] // bottom_right
+    = (vertices_i[1].x <  vertices_j[1].x ? vertices_i[1] : vertices_j[1]);
+
     vertices_dual_light[2] //top_right
     = (vertices_i[2].x > vertices_j[2].x ? vertices_i[2] : vertices_j[2]);
 
-    vertices_dual_light[3] // bottom_right
+    vertices_dual_light[3] //top_right
+    = (vertices_i[3].x > vertices_j[3].x ? vertices_i[3] : vertices_j[3]);
 
     # ifdef SHOW_ARMOR
-    for (size_t i = 0; i < 4; i++)
+    for (int i = 0; i < 4; i++)
     {
         cv::line(mat_real, vertices_dual_light[i], vertices_dual_light[(i + 1) % 4], cv::Scalar(0, 255, 0), 2, 8, 0);
     }

@@ -56,7 +56,7 @@ std::vector<cv::RotatedRect> findLightBox(cv::Mat& mat, cv::Mat& mat_real)
         && vertices[1].y==vertices[2].y 
         && vertices[0].y==vertices[3].y
         && vertices[0].y-vertices[1].y>0 
-        && vertices[3].x-vertices[0].x>0 ))
+        && vertices[3].x-vertices[0].x>0) )
         {
             # ifdef DEBUG
             std::cout << "过滤相同的矩形成功" << std::endl;
