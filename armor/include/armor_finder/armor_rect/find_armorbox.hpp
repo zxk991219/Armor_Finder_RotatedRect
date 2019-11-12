@@ -6,7 +6,7 @@
 # include "../distance/PNP.hpp"
 # include "../image_processing/classifier.hpp"
 # include "../image_processing/quadrilateral_to_mat.hpp"
-
+# include "../../../../other/include/drawText_quadrilateral.hpp"
 
 
 namespace sp
@@ -276,6 +276,7 @@ void get_armor(cv::Mat& mat_real, const cv::RotatedRect rect_i, const cv::Rotate
     #ifdef DEBUG
     std::cout << "成功读取armor_imagepart" << std::endl;
     cv::imshow("armor_imagepart", armor_imagepart);
+    #endif
 
     #ifdef DEBUG
     std::cout << std::endl;
@@ -286,28 +287,32 @@ void get_armor(cv::Mat& mat_real, const cv::RotatedRect rect_i, const cv::Rotate
     std::cout << std::endl;
     #endif
 
-    #endif
-
-    # ifdef SHOW_ARMOR
-    for (int i = 0; i < 4; i++)
-    {
-        cv::line(mat_real, vertices_armor[i], vertices_armor[(i + 1) % 4], cv::Scalar(0, 255, 0), 2, 8, 0);
-    }
-    # endif
-    
+    // #ifdef DEBUG
+    // for (int i = 0; i < 4; i++)
+    // {
+    // cv::line(mat_real, vertices_armor[i], vertices_armor[(i + 1) % 4], cv::Scalar(0, 255, 0), 2, 8, 0);
+    // }
+    // #endif
 
     // 分类器
-    if(sp::classifier(armor_imagepart, "../Video/image/src/armor/image_positive_list.txt"))
+    // 分类器获取装甲板编号
+	int num_armor = sp::classifier(armor_imagepart, "../Video/image/src/armor/image_positive_list.txt");
+    if(num_armor!=0)
     {
         // PNP获取距离和角度
         sp::get_distance(mat_real, vertices_dual_light);
         // sp::get_distance(mat_real, vertices_armor);
 
+        // 在原图上显示装甲板编号
+		std::string num_armor_str = std::to_string(num_armor);
+		sp::drawText_quadrilateral(mat_real, vertices_armor[0], "#"+num_armor_str);
+
 
         # ifdef SHOW_ARMOR
         for (int i = 0; i < 4; i++)
         {
-            cv::line(mat_real, vertices_dual_light[i], vertices_dual_light[(i + 1) % 4], cv::Scalar(0, 255, 0), 2, 8, 0);
+            cv::line(mat_real, vertices_armor[i], vertices_armor[(i + 1) % 4], cv::Scalar(0, 255, 0), 2, 8, 0);
+            // cv::line(mat_real, vertices_dual_light[i], vertices_dual_light[(i + 1) % 4], cv::Scalar(0, 255, 0), 2, 8, 0);
         }
         # endif
     }
