@@ -3,6 +3,10 @@
 # include <iostream>
 # include <opencv2/opencv.hpp>
 # include "armorbox_isok.hpp"
+# include "../distance/PNP.hpp"
+# include "../image_processing/classifier.hpp"
+# include "../image_processing/quadrilateral_to_mat.hpp"
+
 
 
 namespace sp
@@ -28,6 +32,7 @@ std::vector<cv::Rect> findArmorBox(cv::Mat& mat_real, std::vector<cv::RotatedRec
                 sp::get_armor(mat_real, light_boxes[i], light_boxes[j]);
                 armor_boxes_up_right_rects.push_back(sp::get_armor_up_right_rect(light_boxes[i], light_boxes[j]));
 			}
+
         # ifdef SHOW_ARMOR_UP_RIGHT
         for(int i = 0; i<armor_boxes_up_right_rects.size(); i++)
         {
@@ -43,31 +48,210 @@ std::vector<cv::Rect> findArmorBox(cv::Mat& mat_real, std::vector<cv::RotatedRec
 //画出装甲板
 void get_armor(cv::Mat& mat_real, const cv::RotatedRect rect_i, const cv::RotatedRect rect_j)
 {
-    cv::Point2f vertices_i[4];
-    rect_i.points(vertices_i);
+    cv::RotatedRect rect_l = rect_i.center.x < rect_j.center.x ? rect_i : rect_j;
+    cv::RotatedRect rect_r = rect_i.center.x > rect_j.center.x ? rect_i : rect_j;
 
-    cv::Point2f vertices_j[4];
-    rect_j.points(vertices_j);
+    cv::Point2f vertices_l[4];
+    rect_l.points(vertices_l);
+
+
+    cv::Point2f vertices_r[4];
+    rect_r.points(vertices_r);
+
+    if(vertices_l[0].y==vertices_l[1].y)
+    {
+        cv::Point temp = vertices_l[0];
+        vertices_l[0] = vertices_l[1];
+        vertices_l[1] = vertices_l[2];
+        vertices_l[2] = vertices_l[3];
+        vertices_l[3] = temp;
+    }
+
+    if(vertices_r[0].y==vertices_r[1].y)
+    {
+        cv::Point temp = vertices_r[0];
+        vertices_r[0] = vertices_r[1];
+        vertices_r[1] = vertices_r[2];
+        vertices_r[2] = vertices_r[3];
+        vertices_r[3] = temp;
+    }
+
+    # ifdef DEBUG
+    std::cout << "旋转坐标成功" << std::endl;
+    # endif
+
+    #ifdef DEBUG
+    std::cout << "vertices_l[0] x:" <<vertices_l[0].x << "y:" << vertices_l[0].y <<std::endl;
+    std::cout << "vertices_l[1] x:" <<vertices_l[1].x << "y:" << vertices_l[1].y <<std::endl;
+    std::cout << "vertices_l[2] x:" <<vertices_l[2].x << "y:" << vertices_l[2].y <<std::endl;
+    std::cout << "vertices_l[3] x:" <<vertices_l[3].x << "y:" << vertices_l[3].y <<std::endl;
+    std::cout << std::endl;
+    #endif
+
+    #ifdef DEBUG
+    std::cout << "vertices_r[0] x:" <<vertices_r[0].x << "y:" << vertices_r[0].y <<std::endl;
+    std::cout << "vertices_r[1] x:" <<vertices_r[1].x << "y:" << vertices_r[1].y <<std::endl;
+    std::cout << "vertices_r[2] x:" <<vertices_r[2].x << "y:" << vertices_r[2].y <<std::endl;
+    std::cout << "vertices_r[3] x:" <<vertices_r[3].x << "y:" << vertices_r[3].y <<std::endl;
+    std::cout << std::endl;
+    #endif
 
     cv::Point2f vertices_dual_light[4];
 
-    vertices_dual_light[2] //top_right
-    = (vertices_i[2].x > vertices_j[2].x ? vertices_i[2] : vertices_j[2]);
+    vertices_dual_light[0] = //bottom_left 
+    rect_l.size.width < rect_l.size.height ? vertices_l[0] : vertices_l[1];
 
-    vertices_dual_light[3] // bottom_right
+    #ifdef DEBUG
+    std::cout << "vertices_dual_light[0] first x:" <<vertices_dual_light[0].x << "y:" << vertices_dual_light[0].y <<std::endl;
+    #endif
 
-    # ifdef SHOW_ARMOR
-    for (size_t i = 0; i < 4; i++)
+    vertices_dual_light[1] = //top_left
+    rect_l.size.width < rect_l.size.height ? vertices_l[1] : vertices_l[2];
+
+    #ifdef DEBUG
+    std::cout << "vertices_dual_light[1] first x:" <<vertices_dual_light[1].x << "y:" << vertices_dual_light[1].y <<std::endl;
+    #endif
+
+    vertices_dual_light[2] = //top_right
+    rect_r.size.width < rect_r.size.height ? vertices_r[2] : vertices_r[3];
+
+    vertices_dual_light[3] = // bottom_right
+    rect_r.size.width < rect_r.size.height ? vertices_r[3] : vertices_r[0];
+
+    #ifdef DEBUG
+    std::cout << std::endl;
+    std::cout << "vertices_dual_light[0] x:" <<vertices_dual_light[0].x << "y:" << vertices_dual_light[0].y <<std::endl;
+    std::cout << "vertices_dual_light[1] x:" <<vertices_dual_light[1].x << "y:" << vertices_dual_light[1].y <<std::endl;
+    std::cout << "vertices_dual_light[2] x:" <<vertices_dual_light[2].x << "y:" << vertices_dual_light[2].y <<std::endl;
+    std::cout << "vertices_dual_light[3] x:" <<vertices_dual_light[3].x << "y:" << vertices_dual_light[3].y <<std::endl;
+    std::cout << std::endl;
+    #endif
+
+    cv::Point2f vertices_armor[4];
+
+    if(vertices_l[0].y==vertices_l[1].y)
     {
-        cv::line(mat_real, vertices_dual_light[i], vertices_dual_light[(i + 1) % 4], cv::Scalar(0, 255, 0), 2, 8, 0);
+
     }
-    # endif
+    else
+    {
+        if(rect_l.size.width<rect_l.size.height)
+        {
+            vertices_armor[1].x = (18/11)*vertices_l[1].x - (7/11)*vertices_l[0].x;
+            vertices_armor[1].y = (18/11)*vertices_l[1].y - (7/11)*vertices_l[0].y;
 
+            #ifdef DEBUG
+            std::cout << "vertices_armor[1] first x:" <<vertices_armor[1].x << "y:" << vertices_armor[1].y <<std::endl;
+            #endif
 
+            vertices_armor[0].x = (18/11)*vertices_l[0].x - (7/11)*vertices_l[1].x;
+            vertices_armor[0].y = (18/11)*vertices_l[0].y - (7/11)*vertices_l[1].y;
 
+            #ifdef DEBUG
+            std::cout << "vertices_armor[0] first x:" <<vertices_armor[1].x << "y:" << vertices_armor[1].y <<std::endl;
+            #endif
 
+        }
+        else
+        {
+            vertices_armor[1].x = (18/11)*vertices_l[1].x - (7/11)*vertices_l[2].x;
+            vertices_armor[1].y = (18/11)*vertices_l[1].y - (7/11)*vertices_l[2].y;
+
+            #ifdef DEBUG
+            std::cout << "vertices_armor[1] first x:" <<vertices_armor[1].x << "y:" << vertices_armor[1].y <<std::endl;
+            #endif
+
+            vertices_armor[2].x = (18/11)*vertices_l[2].x - (7/11)*vertices_l[1].x;
+            vertices_armor[2].y = (18/11)*vertices_l[2].y - (7/11)*vertices_l[1].y;
+
+            #ifdef DEBUG
+            std::cout << "vertices_armor[2] first x:" <<vertices_armor[1].x << "y:" << vertices_armor[1].y <<std::endl;
+            #endif
+        }
+
+        if(rect_r.size.width<rect_r.size.height)
+        {
+            vertices_armor[2].x = (18/11)*vertices_r[2].x - (7/11)*vertices_r[3].x;
+            vertices_armor[2].y = (18/11)*vertices_r[2].y - (7/11)*vertices_r[3].y;
+
+            #ifdef DEBUG
+            std::cout << "vertices_armor[2] first x:" <<vertices_armor[1].x << "y:" << vertices_armor[1].y <<std::endl;
+            #endif
+            
+            vertices_armor[3].x = (18/11)*vertices_r[3].x - (7/11)*vertices_r[2].x;
+            vertices_armor[3].y = (18/11)*vertices_r[3].y - (7/11)*vertices_r[2].y;
+
+            #ifdef DEBUG
+            std::cout << "vertices_armor[3] first x:" <<vertices_armor[1].x << "y:" << vertices_armor[1].y <<std::endl;
+            #endif
+
+        }
+        else
+        {
+            vertices_armor[0].x = (18/11)*vertices_r[0].x - (7/11)*vertices_r[3].x;
+            vertices_armor[0].y = (18/11)*vertices_r[0].y - (7/11)*vertices_r[3].y;
+
+            #ifdef DEBUG
+            std::cout << "vertices_armor[0] first x:" <<vertices_armor[1].x << "y:" << vertices_armor[1].y <<std::endl;
+            #endif
+
+            vertices_armor[3].x = (18/11)*vertices_r[3].x - (7/11)*vertices_r[0].x;
+            vertices_armor[3].y = (18/11)*vertices_r[3].y - (7/11)*vertices_r[0].y;
+
+            #ifdef DEBUG
+            std::cout << "vertices_armor[3] first x:" <<vertices_armor[1].x << "y:" << vertices_armor[1].y <<std::endl;
+            #endif
+        }
+    }
 
     
+
+    #ifdef DEBUG
+    std::cout << "开始分类" << std::endl;
+    #endif
+
+    cv::Mat armor_imagepart = sp::quadrilateralToMat(mat_real, vertices_armor);
+
+    #ifdef DEBUG
+    std::cout << "成功读取armor_imagepart" << std::endl;
+    cv::imshow("armor_imagepart", armor_imagepart);
+    // cv::waitKey(0);
+
+    #ifdef DEBUG
+    std::cout << std::endl;
+    std::cout << "vertices_armor[0] x:" <<vertices_armor[0].x << "y:" << vertices_armor[0].y <<std::endl;
+    std::cout << "vertices_armor[1] x:" <<vertices_armor[1].x << "y:" << vertices_armor[1].y <<std::endl;
+    std::cout << "vertices_armor[2] x:" <<vertices_armor[2].x << "y:" << vertices_armor[2].y <<std::endl;
+    std::cout << "vertices_armor[3] x:" <<vertices_armor[3].x << "y:" << vertices_armor[3].y <<std::endl;
+    std::cout << std::endl;
+    #endif
+
+    #endif
+
+    # ifdef SHOW_ARMOR
+    for (int i = 0; i < 4; i++)
+    {
+        cv::line(mat_real, vertices_armor[i], vertices_armor[(i + 1) % 4], cv::Scalar(0, 255, 0), 2, 8, 0);
+    }
+    # endif
+    
+
+    // 分类器
+    if(sp::classifier(armor_imagepart, "../Video/image/src/armor/image_positive_list.txt"))
+    {
+        // PNP获取距离和角度
+        sp::get_distance(mat_real, vertices_dual_light);
+        // sp::get_distance(mat_real, vertices_armor);
+
+
+        # ifdef SHOW_ARMOR
+        for (int i = 0; i < 4; i++)
+        {
+            cv::line(mat_real, vertices_dual_light[i], vertices_dual_light[(i + 1) % 4], cv::Scalar(0, 255, 0), 2, 8, 0);
+        }
+        # endif
+    }
+
 
 
 
@@ -91,20 +275,4 @@ cv::Rect get_armor_up_right_rect(const cv::RotatedRect rect_i, const cv::Rotated
 	cv::Rect armor_up_right_rect(egde_i, egde_d, bbox_armor_width, bbox_armor_height);
 	return armor_up_right_rect;
 }
-
-
-
-
-// 判断装甲板方向
-// static bool boxAngleJudge(const cv::RotatedRect &light_blob_i, const cv::RotatedRect &light_blob_j) {
-//     float angle_i = light_blob_i.size.width > light_blob_i.size.height ? light_blob_i.angle :
-//                     light_blob_i.angle - 90;
-//     float angle_j = light_blob_j.size.width > light_blob_j.size.height ? light_blob_j.angle :
-//                     light_blob_j.angle - 90;
-//     float angle = (angle_i + angle_j) / 2.0;
-//     if (abs(angle_i - angle_j) > 90) {
-//         angle += 90.0;
-//     }
-//     return (-120.0 < angle && angle < -60.0) || (60.0 < angle && angle < 120.0);
-// }
 }
