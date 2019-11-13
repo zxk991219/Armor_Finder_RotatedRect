@@ -22,9 +22,9 @@
 namespace sp
 {
 
-    void capture_set(cv::VideoCapture& capture, const int WIDTH,
-     const int HEIGHT, const int FPS, const int BRIGHTNESS,
-     const int CONTRAST, const int SATURATION, const int HUE, const int EXPOSURE)
+    void capture_set(cv::VideoCapture& capture, const double WIDTH,
+     const double HEIGHT, const double FPS, const double BRIGHTNESS,
+     const double CONTRAST, const double SATURATION, const double HUE, const double EXPOSURE)
     {
     capture.set(CV_CAP_PROP_FRAME_WIDTH, WIDTH);//宽度 
     capture.set(CV_CAP_PROP_FRAME_HEIGHT, HEIGHT);//高度
@@ -35,9 +35,16 @@ namespace sp
     capture.set(CV_CAP_PROP_HUE, HUE);//色调
     capture.set(CV_CAP_PROP_EXPOSURE, EXPOSURE);//曝光
 
-    #ifdef DEBUG
-    
-    #endif
+    // #ifdef DEBUG
+    std::cout << capture.get(CV_CAP_PROP_FRAME_WIDTH) << std::endl;//宽度 
+    std::cout << capture.get(CV_CAP_PROP_FRAME_HEIGHT) << std::endl;//高度
+    std::cout << capture.get(CV_CAP_PROP_FPS) << std::endl;//帧数
+    std::cout << capture.get(CV_CAP_PROP_BRIGHTNESS) << std::endl;//亮度
+    std::cout << capture.get(CV_CAP_PROP_CONTRAST) << std::endl;//对比度
+    std::cout << capture.get(CV_CAP_PROP_SATURATION) << std::endl;//饱和度 50
+    std::cout << capture.get(CV_CAP_PROP_HUE) << std::endl;//色调
+    std::cout << capture.get(CV_CAP_PROP_EXPOSURE) << std::endl;//曝光
+    // #endif
 
     }
 }

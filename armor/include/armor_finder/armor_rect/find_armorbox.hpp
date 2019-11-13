@@ -287,18 +287,42 @@ void get_armor(cv::Mat& mat_real, const cv::RotatedRect rect_i, const cv::Rotate
     std::cout << std::endl;
     #endif
 
-    // #ifdef DEBUG
+    // # ifdef SHOW_ARMOR
     // for (int i = 0; i < 4; i++)
     // {
-    // cv::line(mat_real, vertices_armor[i], vertices_armor[(i + 1) % 4], cv::Scalar(0, 255, 0), 2, 8, 0);
+    //     #ifdef USE_RED
+    //     cv::line(mat_real, vertices_armor[i], vertices_armor[(i + 1) % 4], cv::Scalar(0, 0, 255), 2, 8, 0);
+    //     #endif
+
+    //     #ifdef USE_BLUE
+    //     cv::line(mat_real, vertices_armor[i], vertices_armor[(i + 1) % 4], cv::Scalar(255, 0, 0), 2, 8, 0);
+    //     #endif
+
+    //     // cv::line(mat_real, vertices_dual_light[i], vertices_dual_light[(i + 1) % 4], cv::Scalar(0, 255, 0), 2, 8, 0);
     // }
-    // #endif
+    // # endif
 
     // 分类器
     // 分类器获取装甲板编号
+
+    //筛选vertices_armor对角长度
+
+    cv::Point2f diagonal_1 = cv::Point2f(vertices_armor[0].x-vertices_armor[2].x, vertices_armor[0].y-vertices_armor[2].y);
+    cv::Point2f diagonal_2 = cv::Point2f(vertices_armor[1].x-vertices_armor[3].x, vertices_armor[1].y-vertices_armor[3].y);
+
+    float vertices_length_1 = diagonal_1.ddot(diagonal_1);
+    float vertices_length_2 = diagonal_2.ddot(diagonal_2);
+
+    float vertices_rate = vertices_length_1>vertices_length_2 ? (vertices_length_1/vertices_length_2) : (vertices_length_2/vertices_length_1); //长对角线与短对角线之比
+
+
 	int num_armor = sp::classifier(armor_imagepart, "../Video/image/src/armor/image_positive_list.txt");
-    if(num_armor!=0)
+    if(num_armor!=0 && vertices_rate<1.5)
     {
+        #ifdef DEBUG
+        std::cout << "通过分类器" << std::endl;
+        #endif
+
         // PNP获取距离和角度
         sp::get_distance(mat_real, vertices_dual_light);
         // sp::get_distance(mat_real, vertices_armor);
@@ -323,6 +347,13 @@ void get_armor(cv::Mat& mat_real, const cv::RotatedRect rect_i, const cv::Rotate
         }
         # endif
     }
+    else
+    {
+        #ifdef DEBUG
+        std::cout << "未通过分类器" << std::endl;
+        #endif
+    }
+    
 
 
 

@@ -96,6 +96,7 @@ std::vector<cv::RotatedRect> findLightBox(cv::Mat& mat, cv::Mat& mat_real)
         if(mat_imagepart.empty()) continue;
 
         if(sp::lightbox_isok(mat_imagepart, rect))
+        // if(true)
         {
             # ifdef DEBUG
             std::cout << "判断lightbox结束" << std::endl;
@@ -110,8 +111,14 @@ std::vector<cv::RotatedRect> findLightBox(cv::Mat& mat, cv::Mat& mat_real)
                 line(mat, vertices[i], vertices[(i + 1) % 4], {255}, 2, 8, 0);
                 #endif
 
-                line(mat_real, vertices[i], vertices[(i + 1) % 4], {255, 0, 0}, 2, 8, 0);
 
+                #ifdef USE_RED
+                line(mat_real, vertices[i], vertices[(i + 1) % 4], {255, 0, 0}, 2, 8, 0);
+                #endif
+
+                #ifdef USE_BLUE
+                line(mat_real, vertices[i], vertices[(i + 1) % 4], {0, 0, 255}, 2, 8, 0);                
+                #endif
             }
             #endif
 

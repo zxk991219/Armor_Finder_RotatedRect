@@ -44,7 +44,7 @@ bool angle_isok(const cv::RotatedRect rect_i, const cv::RotatedRect rect_j)
                     rect_i.angle - 90;//以最大的y值顶点作x轴，判断角度，以防两个颠倒的矩形配对
     float angle_j = rect_j.size.width > rect_j.size.height ? rect_j.angle :
                     rect_j.angle - 90;
-	if(abs(angle_i - angle_j) < 20)
+	if(abs(angle_i - angle_j) < 10)
 	{
 		return true;
 	}
@@ -69,7 +69,7 @@ bool center_distance_isok(const cv::RotatedRect rect_i, const cv::RotatedRect re
 	double center_distance;
     cv::Point2f centers = rect_i.center - rect_j.center;
     center_distance = sqrt(centers.ddot(centers));
-	if(center_distance / rect_i_height < 6 
+	if(center_distance / rect_i_height < 3 
 	&& center_distance / rect_i_height > 0.5)
 	{
 		return true;

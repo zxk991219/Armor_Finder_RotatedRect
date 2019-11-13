@@ -25,9 +25,20 @@ void findArmor(cv::Mat& mat, cv::Mat& mat_real)
     cv::imshow("medianBlur", mat);
     #endif
 
+    cv::threshold(mat, mat, 200, 255, CV_THRESH_TOZERO);
+    // cv::threshold(mat, mat, 190, 255, CV_THRESH_BINARY);
+
+    #ifdef SHOW_MEDIANBLUR
+    cv::imshow("threshold", mat);
+    #endif
+
 	double thresh_binar = 0.02; //二值化取thresh_binar最亮部分
-	sp::proportion_thresh(mat, mat, 255, thresh_binar); //二值化图像
+	// sp::proportion_thresh(mat, mat, 255, thresh_binar); //二值化图像
     //可以用Canny、拉普拉斯等边缘检测算子处理二值图像
+
+    #ifdef SHOW_MEDIANBLUR
+    cv::imshow("threshold_%", mat);
+    #endif
 
     //Canny处理图像
     // double cannyThr = 200;

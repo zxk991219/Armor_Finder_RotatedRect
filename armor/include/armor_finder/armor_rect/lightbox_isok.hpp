@@ -28,10 +28,10 @@ namespace sp
         std::cout << std::endl;
         # endif
 
-		double length_width_rate_thresh_max = 10; //设定bbox的宽长比上阈值
-		double length_width_rate_thresh_min = 3; //设定bbox的宽长比下阈值
+		double length_width_rate_thresh_max = 7; //设定bbox的长宽比上阈值
+		double length_width_rate_thresh_min = 2.7; //设定bbox的长宽比下阈值
 		double thresh_binar = 0.02; //二值化取thresh_binar最亮部分
-		int thresh_value = 250; // bboxes_light的色度阈值
+		int thresh_value = 220; // bboxes_light的色度阈值
 
 		//灯条矩形长宽比length_width_rate定义
 		double length_width_rate = rect.size.height > rect.size.width ?
@@ -45,7 +45,8 @@ namespace sp
 
 		if(length_width_rate<length_width_rate_thresh_max
 		&& length_width_rate>length_width_rate_thresh_min
-		&& hsv_isok(mat_imagepart, thresh_binar, thresh_value))
+		// && hsv_isok(mat_imagepart, thresh_binar, thresh_value)
+		)
 		{
 			return true;
 		}
