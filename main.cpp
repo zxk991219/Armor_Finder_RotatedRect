@@ -6,8 +6,8 @@
 #undef DEBUG
 #endif
 
-// #define USE_VIDEO
-#define USE_CAMERA
+#define USE_VIDEO
+// #define USE_CAMERA
 
 #define USE_RED
 // #define USE_BLUE
@@ -24,8 +24,8 @@
 // #define SHOW_MONO_COLOR_AFTER
 // #define SHOW_IMAGEPART_LIGHT //显示灯条矩形截图
 // #define SHOW_ARMOR_IMAGE //显示装甲板矩形截图
-// #define SHOW_LIGHT //显示灯条矩形
-// #define SHOW_ARMOR //显示灯条匹配的装甲板不规则四边形
+#define SHOW_LIGHT //显示灯条矩形
+#define SHOW_ARMOR //显示灯条匹配的装甲板不规则四边形
 // #define SHOW_ARMOR_UP_RIGHT //显示灯条匹配的装甲板矩形
 // #define SHOW_ARMOR_WHOLE //显示完整装甲板矩形
 // #define SHOW_DISTANCE //显示距离
@@ -93,8 +93,14 @@ int main()
     #ifdef USE_VIDEO //使用录像
     // capture.open("../Video/Webcam/2019-10-28-222635.webm");
     // capture.open("../Video/Webcam/2019-10-28-223802.webm");
-    capture.open("../Video/Webcam/2019-10-28-223826.webm");
-    // capture.open("../Video/Webcam/2019-10-28-223848.webm");
+    // capture.open("../Video/Webcam/2019-10-28-223826.webm");
+    capture.open("../Video/Webcam/2019-10-28-223848.webm");
+    // capture.open("../Video/Webcam/2019-11-12-232726.webm");
+    // capture.open("../Video/Webcam/2019-11-12-232804.webm");
+    // capture.open("../Video/Webcam/2019-11-12-232829.webm");
+
+
+
     cv::Mat src;
     cv::Mat src_real;
 
