@@ -44,7 +44,7 @@
 # include "armor/include/show_images/show_images.hpp"
 # include "armor/include/armor_finder/armor_rect/find_armor.hpp"
 # include "armor/include/armor_finder/image_processing/color_filter.hpp"
-# include "armor/include/armor_finder/distance/PNP.hpp"
+//# include "armor/include/armor_finder/distance/PNP.hpp"
 // # include "armor/include/armor_finder/image_processing/C-color.hpp"
 // # include "armor/include/armor_finder/distance/distance.hpp"
 
@@ -153,7 +153,7 @@ int main()
 
 
             //寻找装甲板
-            // sp::findArmor(src, src_real); 
+            sp::findArmor(src, src_real); 
             
 
 
