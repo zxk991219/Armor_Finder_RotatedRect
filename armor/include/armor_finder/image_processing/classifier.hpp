@@ -24,7 +24,14 @@ int classifier(const cv::Mat& src, std::string template_filename_list)
 	std::cout << "开始分类" << std::endl;
 	#endif
 
-	double thresh_binar = 0.2; //二值化取thresh_binar最亮部分
+    cv::cvtColor(src, src, CV_RGB2HSV); //转换为HSV
+		
+	#ifdef SHOW_CLASSIFIER_IMAGE
+	cv::imshow("SHOW_CLASSIFIER_IMAGE_HSV", src);
+	#endif
+
+
+	double thresh_binar = 0.7; //二值化取thresh_binar最亮部分
 
 	#ifdef DEBUG
 	std::cout << " " << std::endl;
@@ -65,6 +72,10 @@ int classifier(const cv::Mat& src, std::string template_filename_list)
 
 	cv::resize(src_grey, src_grey, cv::Size(cols, rows), (0,0), (0,0), CV_INTER_AREA);
 
+	#ifdef SHOW_CLASSIFIER_IMAGE
+	cv::imshow("SHOW_CLASSIFIER_IMAGE_GREY", src_grey);
+	#endif
+
 	// 读入模板图像文件
 	std::ifstream template_filename_in(template_filename_list); //读入模板图像文件名文件
 	std::string template_filename;
@@ -94,7 +105,7 @@ int classifier(const cv::Mat& src, std::string template_filename_list)
 		{
 			for(int j=0; j<cols; j++)
 			{
-				if(template_image_grey.at<uchar>(i,j)==255 && src_grey.at<uchar>(i,j)==255)
+				if(template_image_grey.at<uchar>(i,j)==255 && src_grey.at<uchar>(i,j)==0)
 				{
 					gain += 3;
 				}
@@ -130,7 +141,7 @@ int classifier(const cv::Mat& src, std::string template_filename_list)
 	long long int count_classifier_int(timer_now.getTimeStamp());
 	std::string count_classifier_str = std::to_string(count_classifier_int);
 
-	if(*max<800)
+	if(*max<1700)
 	{
 		#ifdef DEBUG
 		std::cout << "舍弃" << std::endl;

@@ -28,10 +28,10 @@ namespace sp
         std::cout << std::endl;
         # endif
 
-		double length_width_rate_thresh_max = 10; //设定bbox的宽长比上阈值
-		double length_width_rate_thresh_min = 3; //设定bbox的宽长比下阈值
+		double length_width_rate_thresh_max = 7; //设定bbox的长宽比上阈值
+		double length_width_rate_thresh_min = 2.7; //设定bbox的长宽比下阈值
 		double thresh_binar = 0.02; //二值化取thresh_binar最亮部分
-		int thresh_value = 250; // bboxes_light的色度阈值
+		int thresh_value = 220; // bboxes_light的色度阈值
 
 		//灯条矩形长宽比length_width_rate定义
 		double length_width_rate = rect.size.height > rect.size.width ?
@@ -45,7 +45,8 @@ namespace sp
 
 		if(length_width_rate<length_width_rate_thresh_max
 		&& length_width_rate>length_width_rate_thresh_min
-		&& hsv_isok(mat_imagepart, thresh_binar, thresh_value))
+		// && hsv_isok(mat_imagepart, thresh_binar, thresh_value)
+		)
 		{
 			return true;
 		}
@@ -144,9 +145,10 @@ namespace sp
 		// 获得bboxes_light的中点坐标和中点hsv亮度
 		scalar = cvGet2D(ipl_in2, rows/2, cols/2);
 
-		if((int)scalar.val[1]>254
-			&& (int)scalar.val[1]<30
-			&& (int)scalar.val[2]>254)
+		if((int)scalar.val[2]>240
+			// && (int)scalar.val[1]>254
+			// && (int)scalar.val[1]<30
+			)
 		{
 			#ifdef DEBUG
 			std::cout << "饱和度" << (int)scalar.val[1] << std::endl;

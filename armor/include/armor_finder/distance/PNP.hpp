@@ -75,6 +75,8 @@ namespace sp
     std::string text= std::to_string( data);
 
     cv::Point origin=pts[2];
+
+    #ifdef USE_RED
     cv::putText( frame,//每一帧的图像
                       text,//文本内容
                       origin,//文本框左下角
@@ -84,6 +86,19 @@ namespace sp
                       4,//字体粗细
                       8,//线型
                       0);
+    #endif
+
+    #ifdef USE_BLUE
+    cv::putText( frame,//每一帧的图像
+                      text,//文本内容
+                      origin,//文本框左下角
+                      cv::FONT_HERSHEY_SIMPLEX,//字体
+                      1,//字体尺寸（大小）
+                      cv::Scalar(255,0,0),//字体颜色
+                      4,//字体粗细
+                      8,//线型
+                      0);
+    #endif
 
  }
 }

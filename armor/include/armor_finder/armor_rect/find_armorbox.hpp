@@ -66,7 +66,7 @@ void get_armor(cv::Mat& mat_real, const cv::RotatedRect rect_i, const cv::Rotate
     std::cout << "右pre矩形角度: " << rect_r_pre.angle <<std::endl;
     #endif
 
-    if(-89.9<rect_l_pre.angle && rect_l_pre.angle< -75.0)
+    if(-89.9<rect_l_pre.angle && rect_l_pre.angle< -85.0)
     {
         rect_l = cv::RotatedRect(rect_l_pre.center, rect_l_pre.size, -90);
 
@@ -89,7 +89,7 @@ void get_armor(cv::Mat& mat_real, const cv::RotatedRect rect_i, const cv::Rotate
     }
         
     
-    if(-89.9<rect_r_pre.angle && rect_r_pre.angle< -75.0)
+    if(-89.9<rect_r_pre.angle && rect_r_pre.angle< -85.0)
     {
         rect_r = cv::RotatedRect(rect_r_pre.center, rect_r_pre.size, -90);
 
@@ -387,18 +387,43 @@ if(rect_l.size.width<rect_l.size.height)
     std::cout << std::endl;
     #endif
 
-    // #ifdef DEBUG
+    // # ifdef SHOW_ARMOR
     // for (int i = 0; i < 4; i++)
     // {
-    // cv::line(mat_real, vertices_armor[i], vertices_armor[(i + 1) % 4], cv::Scalar(0, 255, 0), 2, 8, 0);
+    //     #ifdef USE_RED
+    //     cv::line(mat_real, vertices_armor[i], vertices_armor[(i + 1) % 4], cv::Scalar(0, 0, 255), 2, 8, 0);
+    //     #endif
+
+    //     #ifdef USE_BLUE
+    //     cv::line(mat_real, vertices_armor[i], vertices_armor[(i + 1) % 4], cv::Scalar(255, 0, 0), 2, 8, 0);
+    //     #endif
+
+    //     // cv::line(mat_real, vertices_dual_light[i], vertices_dual_light[(i + 1) % 4], cv::Scalar(0, 255, 0), 2, 8, 0);
     // }
-    // #endif
+    // # endif
 
     // 分类器
     // 分类器获取装甲板编号
+
+    //筛选vertices_armor对角长度
+
+    cv::Point2f diagonal_1 = cv::Point2f(vertices_armor[0].x-vertices_armor[2].x, vertices_armor[0].y-vertices_armor[2].y);
+    cv::Point2f diagonal_2 = cv::Point2f(vertices_armor[1].x-vertices_armor[3].x, vertices_armor[1].y-vertices_armor[3].y);
+
+    float vertices_length_1 = diagonal_1.ddot(diagonal_1);
+    float vertices_length_2 = diagonal_2.ddot(diagonal_2);
+
+    float vertices_rate = vertices_length_1>vertices_length_2 ? (vertices_length_1/vertices_length_2) : (vertices_length_2/vertices_length_1); //长对角线与短对角线之比
+
+
 	int num_armor = sp::classifier(armor_imagepart, "../Video/image/src/armor/image_positive_list.txt");
-    if(num_armor!=0)
+    if(num_armor!=0 && vertices_rate<1.5)
     {
+        #ifdef DEBUG
+        std::cout << "通过分类器" << std::endl;
+        #endif
+
+        #ifdef SHOW_DISTANCE
         // PNP获取距离和角度
         sp::get_distance(mat_real, vertices_dual_light);
         // sp::get_distance(mat_real, vertices_armor);
@@ -406,16 +431,31 @@ if(rect_l.size.width<rect_l.size.height)
         // 在原图上显示装甲板编号
 		std::string num_armor_str = std::to_string(num_armor);
 		sp::drawText_quadrilateral(mat_real, vertices_armor[0], "#"+num_armor_str);
+        #endif
 
 
         # ifdef SHOW_ARMOR
         for (int i = 0; i < 4; i++)
         {
-            cv::line(mat_real, vertices_armor[i], vertices_armor[(i + 1) % 4], cv::Scalar(0, 255, 0), 2, 8, 0);
+            #ifdef USE_RED
+            cv::line(mat_real, vertices_armor[i], vertices_armor[(i + 1) % 4], cv::Scalar(0, 0, 255), 2, 8, 0);
+            #endif
+
+            #ifdef USE_BLUE
+            cv::line(mat_real, vertices_armor[i], vertices_armor[(i + 1) % 4], cv::Scalar(255, 0, 0), 2, 8, 0);
+            #endif
+
             // cv::line(mat_real, vertices_dual_light[i], vertices_dual_light[(i + 1) % 4], cv::Scalar(0, 255, 0), 2, 8, 0);
         }
         # endif
     }
+    else
+    {
+        #ifdef DEBUG
+        std::cout << "未通过分类器" << std::endl;
+        #endif
+    }
+    
 
 
 
