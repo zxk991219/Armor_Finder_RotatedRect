@@ -91,10 +91,10 @@ int main()
 
 
     #ifdef USE_VIDEO //使用录像
-    // capture.open("../Video/2019-10-28-222635.webm");
-    // capture.open("../Video/2019-10-28-223802.webm");
-    capture.open("../Video/2019-10-28-223826.webm");
-    // capture.open("../Video/2019-10-28-223848.webm");
+    // capture.open("../Video/Webcam/2019-10-28-222635.webm");
+    // capture.open("../Video/Webcam/2019-10-28-223802.webm");
+    capture.open("../Video/Webcam/2019-10-28-223826.webm");
+    // capture.open("../Video/Webcam/2019-10-28-223848.webm");
     cv::Mat src;
     cv::Mat src_real;
 
