@@ -20,19 +20,19 @@
 
 // #define SHOW_DEBUG_HSV
 #define SHOW_MEDIANBLUR //显示中值滤波图像
-#define SHOW_MONO_COLOR //显示RGB通道分离结果
+// #define SHOW_MONO_COLOR //显示RGB通道分离结果
 // #define SHOW_MONO_COLOR_AFTER
 // #define SHOW_IMAGEPART_LIGHT //显示灯条矩形截图
 // #define SHOW_ARMOR_IMAGE //显示装甲板矩形截图
 // #define SHOW_LIGHT //显示灯条矩形
-#define SHOW_ARMOR //显示灯条匹配的装甲板不规则四边形
+// #define SHOW_ARMOR //显示灯条匹配的装甲板不规则四边形
 // #define SHOW_ARMOR_UP_RIGHT //显示灯条匹配的装甲板矩形
 // #define SHOW_ARMOR_WHOLE //显示完整装甲板矩形
 // #define SHOW_DISTANCE //显示距离
 // #define SHOW_CONTOURS
 // #define FRAME_BY_FRAME
-// #define CLASSIFIER_OUTPUT //输出分类器结果到"Video/image/dst/negative/和positive"
 #define SHOW_CLASSIFIER_IMAGE
+// #define CLASSIFIER_OUTPUT //输出分类器结果到"Video/image/dst/negative/和positive"
 
 
 
@@ -58,6 +58,20 @@ int main()
 
     #ifdef USE_CAMERA //使用摄像头
     capture.open("/dev/v4l/by-path/pci-0000:00:14.0-usb-0:1:1.0-video-index0",CV_CAP_V4L);
+    
+    #ifdef USE_RED
+    sp::capture_set(capture,  640,//WIDTH
+                              480,//HEIGHT
+                              20,//FPS
+                              64,//BRIGHTNESS,
+                              64,//CONTRAST, 
+                              128,//SATURATION
+                              40,//HUE, const int 
+                              0.003//EXPOSURE
+                    );
+    #endif
+
+    #ifdef USE_BLUE
     sp::capture_set(capture,  640,//WIDTH
                               480,//HEIGHT
                               20,//FPS
@@ -67,6 +81,7 @@ int main()
                               40,//HUE, const int 
                               0.02//EXPOSURE
                     );
+    #endif
     //capture.open(1)
 
     cv::Mat src;
@@ -113,10 +128,6 @@ int main()
             // sp::hsvColorFilter(src, src);
             // #endif
 
-
-
-
-
             #ifdef USE_RGB_FILTER
             sp::rgbColorFilter(src_real, src);
             #endif
@@ -129,13 +140,14 @@ int main()
             #ifdef SHOW_MONO_COLOR
             cv::imshow("SHOW_MONO_COLOR_BEFORE", src);
             #endif
-
-            
-
             if(src.empty())
                 break;
 
-            sp::findArmor(src, src_real);
+
+
+
+            //寻找装甲板
+            // sp::findArmor(src, src_real); 
             
 
 

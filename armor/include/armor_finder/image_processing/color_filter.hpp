@@ -22,6 +22,8 @@ void rgbColorFilter(cv::Mat& src_real, cv::Mat& src)
 	#endif
 
 }
+
+
 void hsvColorFilter(cv::Mat& inputImage, cv::Mat& outputImage)
 {
 	int i, j;
@@ -48,51 +50,68 @@ void hsvColorFilter(cv::Mat& inputImage, cv::Mat& outputImage)
 
 	int width = hsv->width;
 	int height = hsv->height;
-	// for (i = 0; i < height; i++)
-	// 	for (j = 0; j < width; j++)
-	// 	{
-	// 		CvScalar s_hsv = cvGet2D(hsv, i, j);//获取像素点为（j, i）点的HSV的值 
+	
+	#ifdef USE_RED
+	for (i = 0; i < height; i++)
+		for (j = 0; j < width; j++)
+		{
+			CvScalar s_hsv = cvGet2D(hsv, i, j);//获取像素点为（j, i）点的HSV的值 
 			
-	// 		CvScalar s;
+			CvScalar s;
 
-    //         # ifdef USE_RED
-	// 		if (!(
-    //             (((s_hsv.val[0]>0)&&(s_hsv.val[0]<10)) || (s_hsv.val[0]>156)&&(s_hsv.val[0]<180))
-    //             && ((s_hsv.val[1]>43)&&(s_hsv.val[1]<255))
-    //             && ((s_hsv.val[2]>46)&&(s_hsv.val[2]<221))
-    //             (s_hsv.val[2]>250)
-    //             ))
-	// 		{
-	// 			s.val[0]=0;
-	// 			s.val[1]=0;
-	// 			s.val[2]=0;
-	// 			cvSet2D(hsv, i ,j, s);
-	// 		}
-    //         # endif
+            # ifdef USE_RED
+			if (( //红色的HSV定义
+                (((s_hsv.val[0]>0)&&(s_hsv.val[0]<10)) || (s_hsv.val[0]>156)&&(s_hsv.val[0]<180))
+                // && ((s_hsv.val[1]>43)&&(s_hsv.val[1]<255))
+                && ((s_hsv.val[2]>0)&&(s_hsv.val[2]<221))
+                // (s_hsv.val[2]>250)
+                ))
+			// if(false)
+			{
+				s.val[0]=0;
+				s.val[1]=0;
+				s.val[2]=0;
+				cvSet2D(hsv, i ,j, s);
+			}
+			else //将非红色赋值为黑色
+			{
+				s.val[0]=255;
+				s.val[1]=255;
+				s.val[2]=255;
+				cvSet2D(hsv, i ,j, s);
+			}
+			
+            # endif
 
-    //         # ifdef USE_blue
-    //         // # ifdef USE_BLUE
-	// 		if (!(
-    //                ((s_hsv.val[0]>100)&&(s_hsv.val[0]<124))
-    //             && ((s_hsv.val[1]>43)&&(s_hsv.val[1]<255))
-    //             && ((s_hsv.val[2]>46)&&(s_hsv.val[2]<221))
-    //             ))
-	// 		{
-	// 			s.val[0]=0;
-	// 			s.val[1]=0;
-	// 			s.val[2]=0;
-	// 			cvSet2D(hsv, i ,j, s);
-	// 		}
-    //         # endif
+            # ifdef USE_blue
+            // # ifdef USE_BLUE
+			if (!(
+                   ((s_hsv.val[0]>100)&&(s_hsv.val[0]<124))
+                && ((s_hsv.val[1]>43)&&(s_hsv.val[1]<255))
+                && ((s_hsv.val[2]>46)&&(s_hsv.val[2]<221))
+                ))
+			{
+				s.val[0]=0;
+				s.val[1]=0;
+				s.val[2]=0;
+				cvSet2D(hsv, i ,j, s);
+			}
+            # endif
 
-	// 	}
+		}
+	#endif
+
+	#ifdef USE_BLUE
+	#endif
+
+
     outputImage=cv::cvarrToMat(hsv);
 
 	cv::cvtColor(outputImage, outputImage, CV_RGB2GRAY);
 
     #ifdef DEBUG
-	cvNamedWindow("filter");
-	cvShowImage("filter", hsv);
+	cvNamedWindow("hsv_filter");
+	cvShowImage("hsv_filter", hsv);
     #endif
 
 	// cvReleaseImage(&hsv);

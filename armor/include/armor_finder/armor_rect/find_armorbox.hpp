@@ -323,6 +323,7 @@ void get_armor(cv::Mat& mat_real, const cv::RotatedRect rect_i, const cv::Rotate
         std::cout << "通过分类器" << std::endl;
         #endif
 
+        #ifdef SHOW_DISTANCE
         // PNP获取距离和角度
         sp::get_distance(mat_real, vertices_dual_light);
         // sp::get_distance(mat_real, vertices_armor);
@@ -330,6 +331,7 @@ void get_armor(cv::Mat& mat_real, const cv::RotatedRect rect_i, const cv::Rotate
         // 在原图上显示装甲板编号
 		std::string num_armor_str = std::to_string(num_armor);
 		sp::drawText_quadrilateral(mat_real, vertices_armor[0], "#"+num_armor_str);
+        #endif
 
 
         # ifdef SHOW_ARMOR
