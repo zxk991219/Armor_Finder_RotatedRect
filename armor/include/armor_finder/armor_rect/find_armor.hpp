@@ -25,7 +25,7 @@ void findArmor(cv::Mat& mat, cv::Mat& mat_real)
     cv::imshow("medianBlur", mat);
     #endif
 
-    cv::threshold(mat, mat, 200, 255, CV_THRESH_TOZERO);
+    // cv::threshold(mat, mat, 200, 255, CV_THRESH_TOZERO);
     // cv::threshold(mat, mat, 190, 255, CV_THRESH_BINARY);
 
     #ifdef SHOW_MEDIANBLUR

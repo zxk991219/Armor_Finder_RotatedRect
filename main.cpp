@@ -15,23 +15,23 @@
 #define USE_HSV_FILTER
 // #define USE_RGB_FILTER
 
-// #define DEBUG
+#define DEBUG
 #define USE_NEW_CODE
 
-// #define SHOW_DEBUG_HSV
-#define SHOW_MEDIANBLUR //显示中值滤波图像
+#define SHOW_DEBUG_HSV
+// #define SHOW_MEDIANBLUR //显示中值滤波图像
 // #define SHOW_MONO_COLOR //显示RGB通道分离结果
 // #define SHOW_MONO_COLOR_AFTER
 // #define SHOW_IMAGEPART_LIGHT //显示灯条矩形截图
 // #define SHOW_ARMOR_IMAGE //显示装甲板矩形截图
-#define SHOW_LIGHT //显示灯条矩形
+// #define SHOW_LIGHT //显示灯条矩形
 #define SHOW_ARMOR //显示灯条匹配的装甲板不规则四边形
 // #define SHOW_ARMOR_UP_RIGHT //显示灯条匹配的装甲板矩形
 // #define SHOW_ARMOR_WHOLE //显示完整装甲板矩形
-// #define SHOW_DISTANCE //显示距离
+#define SHOW_DISTANCE //显示距离
 // #define SHOW_CONTOURS
-// #define FRAME_BY_FRAME
-#define SHOW_CLASSIFIER_IMAGE
+#define FRAME_BY_FRAME
+// #define SHOW_CLASSIFIER_IMAGE
 // #define CLASSIFIER_OUTPUT //输出分类器结果到"Video/image/dst/negative/和positive"
 
 
@@ -94,10 +94,10 @@ int main()
     // capture.open("../Video/Webcam/2019-10-28-222635.webm");
     // capture.open("../Video/Webcam/2019-10-28-223802.webm");
     // capture.open("../Video/Webcam/2019-10-28-223826.webm");
-    capture.open("../Video/Webcam/2019-10-28-223848.webm");
+    // capture.open("../Video/Webcam/2019-10-28-223848.webm");
     // capture.open("../Video/Webcam/2019-11-12-232726.webm");
     // capture.open("../Video/Webcam/2019-11-12-232804.webm");
-    // capture.open("../Video/Webcam/2019-11-12-232829.webm");
+    capture.open("../Video/Webcam/2019-11-12-232829.webm");
 
 
 
@@ -153,7 +153,7 @@ int main()
 
 
             //寻找装甲板
-            // sp::findArmor(src, src_real); 
+            sp::findArmor(src, src_real); 
             
 
 
