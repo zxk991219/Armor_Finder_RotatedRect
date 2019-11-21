@@ -24,14 +24,16 @@ int classifier(const cv::Mat& src, std::string template_filename_list)
 	std::cout << "开始分类" << std::endl;
 	#endif
 
+	#ifdef USE_HSV_CLASSIFIER
     cv::cvtColor(src, src, CV_RGB2HSV); //转换为HSV
-		
+	#endif
+
 	#ifdef SHOW_CLASSIFIER_IMAGE
 	cv::imshow("SHOW_CLASSIFIER_IMAGE_HSV", src);
 	#endif
 
 
-	double thresh_binar = 0.7; //二值化取thresh_binar最亮部分
+	double thresh_binar = 0.8; //二值化取thresh_binar最亮部分
 
 	#ifdef DEBUG
 	std::cout << " " << std::endl;
@@ -105,7 +107,11 @@ int classifier(const cv::Mat& src, std::string template_filename_list)
 		{
 			for(int j=0; j<cols; j++)
 			{
+				#ifdef USE_HSV_CLASSIFIER
 				if(template_image_grey.at<uchar>(i,j)==255 && src_grey.at<uchar>(i,j)==0)
+				#else
+				if(template_image_grey.at<uchar>(i,j)==255 && src_grey.at<uchar>(i,j)==255)
+				#endif
 				{
 					gain += 3;
 				}
